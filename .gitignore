@@ -1,0 +1,14 @@
+**/node_modules/
+**/out
+**/build
+**/dist
+**/lib
+**/coverage
+
+.nyc_output/
+.cache/
+
+**/test.*
+
+.DS_Store
+package-lock.json

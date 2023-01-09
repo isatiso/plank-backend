@@ -1,0 +1,28 @@
+{
+    "name": "plank-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/isatiso/plank-backend.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/isatiso/plank-backend/issues"
+    },
+    "homepage": "https://github.com/isatiso/plank-backend#readme",
+    "dependencies": {
+        "@tarpit/config": "^0.5.31",
+        "@tarpit/core": "^0.5.31",
+        "@tarpit/http": "^0.5.31",
+        "@tarpit/judge": "^0.5.31",
+        "@tarpit/mongodb": "^0.5.31",
+        "mongodb": "^4.13.0"
+    }
+}
