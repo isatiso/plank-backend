@@ -1,10 +1,10 @@
 import { TpConfigSchema } from '@tarpit/config'
 import { Platform } from '@tarpit/core'
-import { HttpServerModule } from '@tarpit/http'
+import { HttpInspector, HttpServerModule } from '@tarpit/http'
 import { MongodbModule } from '@tarpit/mongodb'
 import { PlankRoot } from './root'
 
-const mongodb_uri = process.env.MONGODB_URI ?? 'mongodb://localhost'
+const mongodb_uri = process.env.MONGODB_URI ?? 'mongodb://root:7XQPqnNLGmVhmyrFNtiHqefT4hNPrU3z@100.70.115.64:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256'
 
 const config: TpConfigSchema = {
     http: {
@@ -20,5 +20,9 @@ const config: TpConfigSchema = {
 const platform = new Platform(config)
     .import(HttpServerModule)
     .import(MongodbModule)
+    .bootstrap(PlankRoot)
 
-platform.bootstrap(PlankRoot).start()
+const inspector = platform.expose(HttpInspector)
+inspector?.list_router().forEach(item => console.log(`${item.method.padEnd(7, ' ')} ${item.path}`))
+
+platform.start()

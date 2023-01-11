@@ -3,6 +3,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
+        "outDir": "./dist",
         "declaration": false,
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
