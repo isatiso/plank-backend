@@ -1,0 +1,17 @@
+.float {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.shadow {
+    height: 64px;
+    width: 100%;
+}
+
+.page-title {
+    &:hover {
+        cursor: pointer;
+    }
+}

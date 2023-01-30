@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- partials_head %>
+</head>
+<body class="container">
+
+<%- partials_header %>
+
+<main>
+    <div class="jumbotron">
+        <h1>This is great</h1>
+        <p>Welcome to templating using EJS</p>
+        <p>port: <%= config %></p>
+        <h2>Variable</h2>
+        <p><%= tagline %></p>
+
+        <ul>
+            <% mascots.forEach(function(mascot) { %>
+                <li>
+                    <strong><%= mascot.name %></strong>
+                    representing <%= mascot.organization %>,
+                    born <%= mascot.birth_year %>
+                </li>
+            <% }); %>
+        </ul>
+
+    </div>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Names</th>
+            <th>Image</th>
+            <th>Created</th>
+        </tr>
+        <% containers.forEach(function(container) { %>
+            <tr>
+                <td><%= container.Id.slice(0, 12) %></td>
+                <td><%= container.Names[0].slice(1) %></td>
+                <td><%= container.Image %></td>
+                <td><%= new Date(container.Created * 1000).toISOString() %></td>
+            </tr>
+        <% }); %>
+    </table>
+</main>
+
+<footer>
+    <%- partials_footer %>
+</footer>
+
+</body>
+</html>

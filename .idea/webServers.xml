@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1fe13abf-c57e-4c7e-b103-63ed2f20cce6" name="tarpit">
+        <fileTransfer rootFolder="/home/plank" accessType="SFTP" host="112.74.191.78" port="22" sshConfigId="f3eae115-b356-4ad2-8f76-6a96c7c87812" sshConfig="plank@112.74.191.78:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" isUseRsync="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
