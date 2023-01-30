@@ -12,10 +12,10 @@ import { TokenService } from './services/token.service'
 
 @TpRoot({
     providers: [
+        TokenService,
         AccountMongo,
         InvitationMongo,
         AccountService,
-        TokenService,
         { provide: HttpHooks, useClass: MyHttpHooks },
         { provide: HttpAuthenticator, useClass: MyAuthenticator },
     ],
