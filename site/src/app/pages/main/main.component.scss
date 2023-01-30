@@ -1,0 +1,28 @@
+:host {
+    display: block;
+}
+
+.main-block-bg {
+
+}
+
+.jumbotron {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    height: 600px;
+    color: white;
+    box-sizing: border-box;
+    padding: 24px;
+    margin-bottom: 24px;
+    //background-color: #e9ecef;
+    border-radius: 6px;
+
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border: 1px solid #999;
+}

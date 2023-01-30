@@ -1,0 +1,39 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./",
+        "outDir": "./dist",
+        "declaration": false,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "jsx": "react",
+        "jsxFactory": "tsx",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "sourceMap": false,
+        "strict": true,
+        "target": "es2019",
+        "plugins": [
+            {
+                "transform": "@tarpit/transformer",
+                "import": "import_string",
+                "pattern": [
+                    "**\/*.html",
+                    "**\/*.ejs"
+                ]
+            },
+            {
+                "transform": "@tarpit/transformer",
+                "import": "import_yaml",
+                "pattern": [
+                    "**\/*.yml",
+                    "**\/*.yaml"
+                ]
+            }
+        ]
+    }
+}

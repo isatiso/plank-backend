@@ -1,35 +1,13 @@
 {
-    "name": "plank-backend",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "build": "tsc",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/isatiso/plank-backend.git"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/isatiso/plank-backend/issues"
-    },
-    "homepage": "https://github.com/isatiso/plank-backend#readme",
-    "dependencies": {
-        "@tarpit/config": "^0.5.34",
-        "@tarpit/content-type": "^0.5.34",
-        "@tarpit/core": "^0.5.34",
-        "@tarpit/dora": "^0.5.34",
-        "@tarpit/error": "^0.5.34",
-        "@tarpit/http": "^0.5.34",
-        "@tarpit/judge": "^0.5.34",
-        "@tarpit/mongodb": "^0.5.34",
-        "@tarpit/type-tools": "^0.5.34",
-        "@types/ejs": "^3.1.1",
-        "ejs": "^3.1.8",
-        "mongodb": "^4.13.0"
+    "name": "plank-site",
+    "private": true,
+    "author": "Cao Jiahang <sieglive@gmail.com>",
+    "scripts": {},
+    "workspaces": [
+        "server",
+        "site"
+    ],
+    "devDependencies": {
+        "lerna": "^6.5.1"
     }
 }

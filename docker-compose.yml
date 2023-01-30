@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  backend:
+    image: node:16-alpine
+    network_mode: host
+    working_dir: /home/code
+    environment:
+      - "MONGODB_URL=${MONGODB_URL}"
+      - "RABBITMQ_URL=${RABBITMQ_URL}"
+      - "PLANK_SERVER_HOST=${PLANK_SERVER_HOST}"
+    volumes:
+      - ./server/lib:/home/code
+      - ./node_modules:/home/node_modules
+      - ./server/node_modules:/home/code/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint:
+      - "node"
+      - "./index.js"
+  nginx:
+    image: nginx
+    network_mode: host
+    working_dir: /etc/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "80"
+      - "443"
+    volumes:
+      - "${NGINX_LOCAL_PATH}/html:/usr/share/nginx/html"
+      - "${NGINX_LOCAL_PATH}/conf.d:/etc/nginx/conf.d"
+      - "${NGINX_LOCAL_PATH}/conf/nginx.conf:/etc/nginx/nginx.conf"
+      - "${NGINX_LOCAL_PATH}/logs:/var/log/nginx"
+      - "${NGINX_LOCAL_PATH}/certs:/etc/nginx/cert"
+  mongodb:
+    image: mongo:6.0
+    network_mode: host
+    environment:
+      - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+  rabbitmq:
+    image: rabbitmq:3-management
+    network_mode: host
+    environment:
+      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}"
+      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
+

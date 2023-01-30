@@ -1,0 +1,6 @@
+{
+    "/plank-environment": {
+        "target": "http://100.70.115.64:3000",
+        "secure": false
+    }
+}
