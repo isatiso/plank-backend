@@ -12,10 +12,6 @@ export class AccountService {
         private account: AccountMongo,
         private invitation: InvitationMongo,
     ) {
-        console.log('=======>', AccountMongo)
-        console.log('=======>', account)
-        console.log('=======>', account.m)
-        console.log('=======>', invitation)
     }
 
     async create(username: string, password: string, invitation_code: string): Promise<{ id: ObjectId }> {

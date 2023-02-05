@@ -1,5 +1,4 @@
 import { GenericCollection, TpMongo } from '@tarpit/mongodb'
-import { TokenService } from '../services/token.service'
 
 export interface AccountData {
     username: string
@@ -11,17 +10,4 @@ export interface AccountData {
 
 @TpMongo('main', 'account')
 export class AccountMongo extends GenericCollection<AccountData>() {
-
-    constructor(
-        private token: TokenService
-    ) {
-        super()
-        console.log(token)
-    }
-
-    m = 2
-
-    test() {
-        return 'lkj'
-    }
 }

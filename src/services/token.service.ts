@@ -7,7 +7,7 @@ export class TokenService {
     private secret = this.config.get('local.token_secret')
 
     constructor(
-        private config: ConfigData
+        private config: ConfigData,
     ) {
     }
 

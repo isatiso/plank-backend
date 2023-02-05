@@ -19,17 +19,15 @@
     },
     "homepage": "https://github.com/isatiso/plank-backend#readme",
     "dependencies": {
-        "@tarpit/config": "^0.5.34",
-        "@tarpit/content-type": "^0.5.34",
-        "@tarpit/core": "^0.5.34",
-        "@tarpit/dora": "^0.5.34",
-        "@tarpit/error": "^0.5.34",
-        "@tarpit/http": "^0.5.34",
-        "@tarpit/judge": "^0.5.34",
-        "@tarpit/mongodb": "^0.5.34",
-        "@tarpit/type-tools": "^0.5.34",
+        "@tarpit/config": "^0.5.36",
+        "@tarpit/core": "^0.5.36",
+        "@tarpit/error": "^0.5.36",
+        "@tarpit/http": "^0.5.36",
+        "@tarpit/judge": "^0.5.36",
+        "@tarpit/mongodb": "^0.5.36",
+        "@tarpit/type-tools": "^0.5.36",
         "@types/ejs": "^3.1.1",
         "ejs": "^3.1.8",
-        "mongodb": "^4.13.0"
+        "typescript": "^4.9.5"
     }
 }
