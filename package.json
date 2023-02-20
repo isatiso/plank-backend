@@ -27,7 +27,11 @@
         "@tarpit/mongodb": "^0.5.36",
         "@tarpit/type-tools": "^0.5.36",
         "@types/ejs": "^3.1.1",
+        "@types/ws": "^8.5.4",
         "ejs": "^3.1.8",
-        "typescript": "^4.9.5"
+        "typescript": "^4.9.5",
+        "mongodb": "^4.13.0",
+        "redis": "^4.6.4",
+        "ws": "^8.12.1"
     }
 }

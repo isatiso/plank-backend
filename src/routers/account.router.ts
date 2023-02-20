@@ -1,10 +1,13 @@
-import { Auth, Get, Guard, JsonBody, Post, throw_not_found, TpRouter } from '@tarpit/http'
+import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, WS } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
+import { WebSocket } from 'ws'
 import { AccountService } from '../services/account.service'
 import { TokenService } from '../services/token.service'
 
 @TpRouter('/account', {})
 export class AccountRouter {
+
+    private ws_map: Record<string, WebSocket> = {}
 
     constructor(
         private account: AccountService,
@@ -36,6 +39,48 @@ export class AccountRouter {
             throw_not_found()
         }
         return { token: this.token_service.generate({ username: username }) }
+    }
+
+    @WS('subscribe/:id')
+    async subscribe(ws: WebSocket, guard: Guard, args: PathArgs<{ id: string }>, headers: RequestHeaders) {
+        ws.send('blablablabla')
+        const id = args.ensure('id', Jtl.string)
+        console.log(headers.data)
+        // const name = guard.ensure('name', Jtl.string)
+        // if (this.ws_map[id]) {
+        //     console.log('close')
+        //     ws.close()
+        //     return
+        // }
+        this.ws_map[id] = ws
+        // ws.on('close', () => delete this.ws_map[id])
+        ws.on('message', (data, isBinary) => {
+            console.log(data.toString())
+            throw new Error('Thrown this error from message callback')
+        })
+        console.log(this.ws_map)
+
+        setTimeout(() => ws.send('OIUOIUOIUOIU'), 1000)
+    }
+
+    @Post('send/:id')
+    async send(args: PathArgs<{ id: string }>, body: JsonBody<{ msg: string }>) {
+        console.log(args.data, body.data)
+        const id = args.ensure('id', Jtl.string)
+        const msg = body.ensure('msg', Jtl.string)
+        if (this.ws_map[id]) {
+            this.ws_map[id].send(msg)
+        }
+
+        return {
+            keys: Object.keys(this.ws_map),
+            id, msg
+        }
+    }
+
+    @Post()
+    async ping() {
+        return 'pong'
     }
 
     @Auth()

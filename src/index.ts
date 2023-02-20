@@ -1,10 +1,15 @@
 import { TpConfigSchema } from '@tarpit/config'
 import { Platform } from '@tarpit/core'
-import { HttpInspector, HttpServerModule } from '@tarpit/http'
+import { HttpInspector, HttpServerModule, HttpCredentials } from '@tarpit/http'
 import { MongodbModule } from '@tarpit/mongodb'
 import { PlankRoot } from './root'
 
-const mongodb_uri = process.env.MONGODB_URI ?? 'mongodb://root:7XQPqnNLGmVhmyrFNtiHqefT4hNPrU3z@100.70.115.64:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256'
+declare module '@tarpit/http' {
+    export interface HttpCredentials {
+        name?: string
+    }
+}
+const mongodb_uri = process.env.MONGODB_URL ?? ''
 
 const config: TpConfigSchema = {
     local: {
@@ -17,7 +22,9 @@ const config: TpConfigSchema = {
             root: './assets'
         }
     },
-    mongodb: { uri: mongodb_uri },
+    mongodb: {
+        uri: mongodb_uri,
+    },
 }
 
 const platform = new Platform(config)
