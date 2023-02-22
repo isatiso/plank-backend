@@ -1,12 +1,18 @@
 import { TpConfigSchema } from '@tarpit/config'
 import { Platform } from '@tarpit/core'
-import { HttpInspector, HttpServerModule, HttpCredentials } from '@tarpit/http'
-import { MongodbModule } from '@tarpit/mongodb'
+import { HttpInspector, HttpServerModule } from '@tarpit/http'
+import { MongodbModule, TpMongoClientConfig } from '@tarpit/mongodb'
 import { PlankRoot } from './root'
 
 declare module '@tarpit/http' {
     export interface HttpCredentials {
-        name?: string
+        username: string
+    }
+}
+
+declare module '@tarpit/mongodb' {
+    export interface TpMongoClientConfigMap {
+        mongo1: TpMongoClientConfig
     }
 }
 const mongodb_uri = process.env.MONGODB_URL ?? ''
@@ -23,7 +29,12 @@ const config: TpConfigSchema = {
         }
     },
     mongodb: {
-        uri: mongodb_uri,
+        url: mongodb_uri,
+        other_clients: {
+            mongo1: {
+                url: mongodb_uri,
+            }
+        }
     },
 }
 

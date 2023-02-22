@@ -8,6 +8,6 @@ export interface AccountData {
     updated_at: number
 }
 
-@TpMongo('main', 'account', { instance_name: 'mongo1' })
+@TpMongo('main', 'account', { client_name: 'mongo1' })
 export class AccountMongo extends GenericCollection<AccountData>() {
 }

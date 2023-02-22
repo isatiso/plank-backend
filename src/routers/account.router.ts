@@ -1,13 +1,12 @@
-import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, WS } from '@tarpit/http'
+import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, WS, TpWebSocket } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
-import { WebSocket } from 'ws'
 import { AccountService } from '../services/account.service'
 import { TokenService } from '../services/token.service'
 
 @TpRouter('/account', {})
 export class AccountRouter {
 
-    private ws_map: Record<string, WebSocket> = {}
+    private ws_map: Record<string, TpWebSocket> = {}
 
     constructor(
         private account: AccountService,
@@ -42,9 +41,11 @@ export class AccountRouter {
     }
 
     @WS('subscribe/:id')
-    async subscribe(ws: WebSocket, guard: Guard, args: PathArgs<{ id: string }>, headers: RequestHeaders) {
-        ws.send('blablablabla')
+    // @Auth()
+    async subscribe(ws: TpWebSocket, guard: Guard, args: PathArgs<{ id: string }>, headers: RequestHeaders) {
+        await ws.send('blablablabla')
         const id = args.ensure('id', Jtl.string)
+        // throw new Error('qweqweqwe')
         console.log(headers.data)
         // const name = guard.ensure('name', Jtl.string)
         // if (this.ws_map[id]) {
@@ -54,13 +55,17 @@ export class AccountRouter {
         // }
         this.ws_map[id] = ws
         // ws.on('close', () => delete this.ws_map[id])
-        ws.on('message', (data, isBinary) => {
-            console.log(data.toString())
-            throw new Error('Thrown this error from message callback')
+        ws.on_error(err => {
+            console.log('terminate ws')
+            ws.terminate()
         })
-        console.log(this.ws_map)
+        ws.on_message((data, isBinary) => {
+            console.log(data.toString())
+            // throw new Error('Thrown this error from message callback')
+        })
+        // console.log(this.ws_map)
 
-        setTimeout(() => ws.send('OIUOIUOIUOIU'), 1000)
+        setTimeout(() => ws.send('OIUOIUOIUOIU'), 2000)
     }
 
     @Post('send/:id')
