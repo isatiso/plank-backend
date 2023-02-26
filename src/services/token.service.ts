@@ -1,5 +1,4 @@
-import { ConfigData } from '@tarpit/config'
-import { TpService } from '@tarpit/core'
+import { TpConfigData, TpService } from '@tarpit/core'
 import crypto from 'crypto'
 
 @TpService()
@@ -7,7 +6,7 @@ export class TokenService {
     private secret = this.config.get('local.token_secret')
 
     constructor(
-        private config: ConfigData,
+        private config: TpConfigData,
     ) {
     }
 

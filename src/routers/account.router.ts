@@ -1,4 +1,4 @@
-import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, WS, TpWebSocket } from '@tarpit/http'
+import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, TpWebSocket, WS } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
 import { AccountService } from '../services/account.service'
 import { TokenService } from '../services/token.service'
@@ -55,12 +55,12 @@ export class AccountRouter {
         // }
         this.ws_map[id] = ws
         // ws.on('close', () => delete this.ws_map[id])
-        ws.on_error(err => {
+        ws.on('error', err => {
             console.log('terminate ws')
             ws.terminate()
         })
-        ws.on_message((data, isBinary) => {
-            console.log(data.toString())
+        ws.on('message', (data, isBinary) => {
+            console.log('Receive from client', data.toString())
             // throw new Error('Thrown this error from message callback')
         })
         // console.log(this.ws_map)
@@ -73,6 +73,11 @@ export class AccountRouter {
         console.log(args.data, body.data)
         const id = args.ensure('id', Jtl.string)
         const msg = body.ensure('msg', Jtl.string)
+        if (msg[msg.length - 1] === '1') {
+            this.ws_map[id].close()
+            delete this.ws_map[id]
+            return {}
+        }
         if (this.ws_map[id]) {
             this.ws_map[id].send(msg)
         }
@@ -85,7 +90,13 @@ export class AccountRouter {
 
     @Post()
     async ping() {
-        return 'pong'
+        const arr: any[] = []
+        for (let i = 0; i < 10000; i++) {
+            arr.push({ ping: ['pong'] })
+        }
+        return {
+            ping: arr
+        }
     }
 
     @Auth()

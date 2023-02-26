@@ -1,5 +1,5 @@
-import { TpConfigSchema } from '@tarpit/config'
-import { Platform } from '@tarpit/core'
+import { load_config } from '@tarpit/config'
+import { Platform, TpConfigSchema } from '@tarpit/core'
 import { HttpInspector, HttpServerModule } from '@tarpit/http'
 import { MongodbModule, TpMongoClientConfig } from '@tarpit/mongodb'
 import { PlankRoot } from './root'
@@ -17,7 +17,7 @@ declare module '@tarpit/mongodb' {
 }
 const mongodb_uri = process.env.MONGODB_URL ?? ''
 
-const config: TpConfigSchema = {
+const config = load_config<TpConfigSchema>({
     local: {
         token_secret: '123456789'
     },
@@ -36,7 +36,7 @@ const config: TpConfigSchema = {
             }
         }
     },
-}
+})
 
 const platform = new Platform(config)
     .import(HttpServerModule)

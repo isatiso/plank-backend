@@ -6,7 +6,7 @@ declare module '@tarpit/http' {
     }
 }
 
-declare module '@tarpit/config' {
+declare module '@tarpit/core' {
 
     export interface TpConfigSchema {
         local: {
