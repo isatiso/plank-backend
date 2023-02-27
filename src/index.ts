@@ -1,7 +1,7 @@
-import { load_config } from '@tarpit/config'
-import { Platform, TpConfigSchema } from '@tarpit/core'
+import { Platform } from '@tarpit/core'
 import { HttpInspector, HttpServerModule } from '@tarpit/http'
 import { MongodbModule, TpMongoClientConfig } from '@tarpit/mongodb'
+import { plank_backend_config } from './config'
 import { PlankRoot } from './root'
 
 declare module '@tarpit/http' {
@@ -15,30 +15,8 @@ declare module '@tarpit/mongodb' {
         mongo1: TpMongoClientConfig
     }
 }
-const mongodb_uri = process.env.MONGODB_URL ?? ''
 
-const config = load_config<TpConfigSchema>({
-    local: {
-        token_secret: '123456789'
-    },
-    http: {
-        port: 3000,
-        expose_error: true,
-        static: {
-            root: './assets'
-        }
-    },
-    mongodb: {
-        url: mongodb_uri,
-        other_clients: {
-            mongo1: {
-                url: mongodb_uri,
-            }
-        }
-    },
-})
-
-const platform = new Platform(config)
+const platform = new Platform(plank_backend_config)
     .import(HttpServerModule)
     .import(MongodbModule)
     .bootstrap(PlankRoot)

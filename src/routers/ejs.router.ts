@@ -1,5 +1,6 @@
 import { Get, TpResponse, TpRouter } from '@tarpit/http'
 import ejs from 'ejs'
+import { plank_backend_config } from '../config'
 
 @TpRouter('/ejs', {})
 export class EjsRouter {
@@ -15,7 +16,8 @@ export class EjsRouter {
         response.content_type = 'text/html'
         return ejs.renderFile('./pages/index.ejs', {
             mascots: mascots,
-            tagline: tagline
+            tagline: tagline,
+            config: plank_backend_config.get('http.port')
         })
     }
 
