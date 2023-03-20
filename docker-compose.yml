@@ -2,6 +2,7 @@ version: '3'
 
 services:
   server:
+    hostname: plank-server
     image: node:16-alpine
     working_dir: /home/code
     environment:
@@ -19,6 +20,7 @@ services:
     networks:
       - "plank-net"
   nginx:
+    hostname: plank-nginx
     image: nginx
     working_dir: /etc/nginx
     ports:
@@ -36,6 +38,7 @@ services:
     networks:
       - "plank-net"
   mongodb:
+    hostname: plank-mongo
     image: mongo:6.0
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
@@ -43,6 +46,7 @@ services:
     networks:
       - "plank-net"
   rabbitmq:
+    hostname: plank-rabbitmq
     image: rabbitmq:3-management
     ports:
       - "15672:15672"
