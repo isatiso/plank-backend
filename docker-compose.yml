@@ -6,8 +6,8 @@ services:
     image: node:16-alpine
     working_dir: /home/code
     environment:
-      - "MONGODB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256"
-      - "RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672"
+      - "MONGODB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@plank-mongo:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256"
+      - "RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@plank-rabbitmq:5672"
       - "PLANK_SERVER_HOST=${PLANK_SERVER_HOST}"
     volumes:
       - ./server/lib:/home/code
