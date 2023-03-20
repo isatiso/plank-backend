@@ -57,5 +57,4 @@ services:
 
 networks:
   plank-net:
-    external:
-      name: plank-net
+    internal: true
