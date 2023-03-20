@@ -28,8 +28,10 @@
         "@tarpit/mongodb": "^0.5.46",
         "@tarpit/type-tools": "^0.5.46",
         "@types/ejs": "^3.1.2",
+        "@types/marked": "^4.0.8",
         "axios": "^1.3.4",
-        "ejs": "^3.1.9"
+        "ejs": "^3.1.9",
+        "marked": "^4.2.12"
     },
     "devDependencies": {
         "@rollup/plugin-json": "^6.0.0",

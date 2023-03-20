@@ -4,11 +4,8 @@ import { MyAuthenticator } from './authenticator'
 import { AccountMongo } from './data/account.mongo'
 import { InvitationMongo } from './data/invitation.mongo'
 import { MyHttpHooks } from './hooks'
-import { AccountRouter } from './routers/account.router'
-import { BaseRouter } from './routers/base.router'
-import { DockerContainerRouter } from './routers/docker-container.router'
-import { EjsRouter } from './routers/ejs.router'
-import { HealthCheckRouter } from './routers/health-check.router'
+import { ApiRouterModule } from './apis/api-router.module'
+import { PageRouterModule } from './pages/page-router.module'
 import { AccountService } from './services/account.service'
 import { DockerContainerService } from './services/docker-container.service'
 import { TokenService } from './services/token.service'
@@ -24,11 +21,8 @@ import { TokenService } from './services/token.service'
         { provide: HttpAuthenticator, useClass: MyAuthenticator },
     ],
     entries: [
-        AccountRouter,
-        BaseRouter,
-        DockerContainerRouter,
-        EjsRouter,
-        HealthCheckRouter,
+        ApiRouterModule,
+        PageRouterModule,
     ],
 })
 export class PlankRoot {

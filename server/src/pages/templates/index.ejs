@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Plank Site | Home</title>
+    <%- include('head') %>
+</head>
+<body class="container">
+
+<%- include('header') %>
+
+<main>
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="fw-bold">欢迎来到我们的网站！</h1>
+            <p class="col-md-8 fs-5">
+                我们是一个致力于为您提供高质量服务的团队。我们的网站提供各种资源和工具，以帮助您实现您的目标和梦想。
+            </p>
+            <p class="col-md-8 fs-5">
+                我们的网站内容包括各种主题，例如教育、商业、科技和娱乐等。我们提供实用的指南和建议，帮助您在不同领域中获得成功。
+                无论您是正在寻找新的学习资源，还是需要建立新的业务关系，我们都有您所需的工具和资源。
+            </p>
+            <p class="col-md-8 fs-5">
+                我们的团队由专业人士组成，他们在各自领域拥有多年的经验和知识。
+                我们的目标是为您提供最好的服务，确保您在使用我们的网站时能够获得最大的收益。
+            </p>
+            <p class="col-md-8 fs-5">
+                我们的网站具有用户友好的界面和易于导航的功能，您可以轻松地找到您需要的资源和工具。
+                我们还提供各种社交媒体平台的链接，以便您可以随时与我们保持联系。
+            </p>
+            <p class="col-md-8 fs-5">
+                无论您是学生、企业家还是任何人，我们都欢迎您来访问我们的网站。
+                我们希望能够为您提供最好的服务，并成为您在不同领域中实现成功的最佳合作伙伴。
+            </p>
+
+            <a class="btn btn-primary" href="/markdown/main/article_1" role="button">Get Start</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Names</th>
+            <th>Image</th>
+            <th>Created</th>
+        </tr>
+        <% containers.forEach(function(container) { %>
+            <tr>
+                <td><%= container.Id.slice(0, 12) %></td>
+                <td><%= container.Names[0].slice(1) %></td>
+                <td><%= container.Image %></td>
+                <td><%= new Date(container.Created * 1000).toISOString() %></td>
+            </tr>
+        <% }); %>
+    </table>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>
+
+</body>
+</html>

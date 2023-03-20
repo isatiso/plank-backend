@@ -1,16 +1,17 @@
 import { Get, TpResponse, TpRouter } from '@tarpit/http'
 import axios from 'axios'
-import ejs from 'ejs'
-import page_about from '../pages/about.ejs'
-import page_index from '../pages/index.ejs'
-import partials_header from '../pages/partials/header.ejs'
-import partials_head from '../pages/partials/head.ejs'
-import partials_footer from '../pages/partials/footer.ejs'
-import { plank_backend_config } from '../config'
-import docker_compose_yml from '../../../docker-compose.yml'
+import docker_compose_yml from '../../../../docker-compose.yml'
+import { plank_backend_config } from '../../config'
+import { EjsTemplateService } from '../services/ejs-template.service'
 
 @TpRouter('/ejs', {})
 export class EjsRouter {
+
+    constructor(
+        private ejs_template: EjsTemplateService,
+    ) {
+    }
+
     @Get('')
     async index(response: TpResponse) {
         response.redirect('/ejs/main', 302)
@@ -27,27 +28,27 @@ export class EjsRouter {
 
         response.content_type = 'text/html'
 
-        const res = await axios.get('http://localhost/containers/json', { socketPath: '/var/run/docker.sock' })
+        const res = await axios.get('http://localhost/containers/json', { socketPath: '/var/run/docker.sock' }).catch(() => ({ data: [] }))
 
-        return ejs.render(page_index, {
+        return this.ejs_template.render('page_index', {
             mascots: mascots,
             tagline: tagline,
             config: plank_backend_config.get('http.port'),
             containers: res.data,
-            partials_header,
-            partials_head,
-            partials_footer
         })
     }
 
     @Get()
     async about(response: TpResponse) {
         response.content_type = 'text/html'
-        return ejs.render(page_about, {
-            partials_header,
-            partials_head,
-            partials_footer,
+        return this.ejs_template.render('page_about', {
             docker_compose_yml: JSON.stringify(docker_compose_yml, null, 4)
         })
+    }
+
+    @Get('404')
+    async not_found(response: TpResponse) {
+        response.content_type = 'text/html'
+        return this.ejs_template.render('page_not_found')
     }
 }

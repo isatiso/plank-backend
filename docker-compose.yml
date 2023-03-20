@@ -5,6 +5,10 @@ services:
     hostname: plank-server
     image: node:16-alpine
     working_dir: /home/code
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - "MONGODB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@plank-mongo:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256"
       - "RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@plank-rabbitmq:5672"
@@ -12,6 +16,7 @@ services:
     volumes:
       - ./server/lib:/home/code
       - ./node_modules:/home/node_modules
+      - ./server/assets:/home/code/assets
       - ./server/node_modules:/home/code/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     entrypoint:
@@ -40,6 +45,10 @@ services:
   mongodb:
     hostname: plank-mongo
     image: mongo:6.0
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
       - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"

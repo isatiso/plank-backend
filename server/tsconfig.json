@@ -23,7 +23,8 @@
                 "import": "import_string",
                 "pattern": [
                     "**\/*.html",
-                    "**\/*.ejs"
+                    "**\/*.ejs",
+                    "**\/*.md",
                 ]
             },
             {

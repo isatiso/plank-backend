@@ -1,5 +1,5 @@
-import { Get, TpResponse, TpRouter } from '@tarpit/http'
-import { DockerContainerService } from '../services/docker-container.service'
+import { Get, TpRouter } from '@tarpit/http'
+import { DockerContainerService } from '../../services/docker-container.service'
 
 @TpRouter('/docker', {})
 export class DockerContainerRouter {

@@ -2,21 +2,31 @@
     display: block;
 }
 
-.main-block-bg {
-
-}
-
 .jumbotron {
     position: absolute;
-    top: 24px;
-    left: 24px;
+    width: 720px;
     height: 600px;
     color: white;
     box-sizing: border-box;
     padding: 24px;
-    margin-bottom: 24px;
-    //background-color: #e9ecef;
-    border-radius: 6px;
+
+    &.light {
+        color: #444;
+    }
+
+    &.dark {
+        color: white;
+    }
+
+    &.left {
+        top: 24px;
+        left: 24px;
+    }
+
+    &.right {
+        top: 24px;
+        right: 24px;
+    }
 
 }
 

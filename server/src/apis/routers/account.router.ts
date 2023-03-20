@@ -1,7 +1,7 @@
 import { Auth, Guard, JsonBody, PathArgs, Post, RequestHeaders, throw_not_found, TpRouter, TpWebSocket, WS } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
-import { AccountService } from '../services/account.service'
-import { TokenService } from '../services/token.service'
+import { AccountService } from '../../services/account.service'
+import { TokenService } from '../../services/token.service'
 
 @TpRouter('/account', {})
 export class AccountRouter {

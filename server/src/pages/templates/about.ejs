@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- partials_head %>
+    <title>Plank Site | About</title>
+    <%- include('head') %>
 </head>
 <body class="container">
 
-<%- partials_header %>
+<%- include('header') %>
 
 <main>
     <div class="row">
@@ -23,13 +24,14 @@
         </div>
     </div>
     <pre>
-        <code><%= docker_compose_yml %></code>
+        <code class="language-json"><%= docker_compose_yml %></code>
     </pre>
 </main>
 
 <footer>
-    <%- partials_footer %>
+    <%- include('footer') %>
 </footer>
 
 </body>
+<%- include('scripts') %>
 </html>
