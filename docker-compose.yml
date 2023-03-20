@@ -16,6 +16,8 @@ services:
     entrypoint:
       - "node"
       - "./index.js"
+    networks:
+      - "plank-net"
   nginx:
     image: nginx
     working_dir: /etc/nginx
