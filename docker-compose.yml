@@ -55,3 +55,7 @@ services:
     networks:
       - "plank-net"
 
+networks:
+  plank-net:
+    external:
+      name: plank-net
