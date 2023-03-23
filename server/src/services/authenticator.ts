@@ -1,7 +1,7 @@
 import { TpService } from '@tarpit/core'
 import { Guard, HttpAuthenticator, HttpCredentials, throw_unauthorized, TpRequest } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
-import { TokenService } from './services/token.service'
+import { TokenService } from './token.service'
 
 @TpService({ inject_root: true })
 export class MyAuthenticator extends HttpAuthenticator {

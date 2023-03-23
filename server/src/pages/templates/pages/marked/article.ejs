@@ -1,0 +1,21 @@
+<%- include('header') %>
+
+<main>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <% for (let i = 0; i < breadcrumb.length - 1; i++) { %>
+                <li class="breadcrumb-item"><a href="/<%= breadcrumb[i].path %>"><%= breadcrumb[i].name %></a></li>
+            <% } %>
+            <% if (breadcrumb.length > 0) { %>
+                <li class="breadcrumb-item active"><%= breadcrumb[breadcrumb.length - 1].name %></li>
+            <% } %>
+        </ol>
+    </nav>
+    <div class="markdown-body m-0 p-lg-5 p-md-4 p-3">
+        <%- markdown_content %>
+    </div>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

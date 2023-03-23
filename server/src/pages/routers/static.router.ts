@@ -1,5 +1,4 @@
-import { Get, HttpStatic, PathArgs, TpRequest, TpResponse, TpRouter } from '@tarpit/http'
-import { Jtl } from '@tarpit/judge'
+import { Get, HttpStatic, TpRequest, TpResponse, TpRouter } from '@tarpit/http'
 
 @TpRouter('/', {})
 export class StaticRouter {
@@ -14,9 +13,8 @@ export class StaticRouter {
         return this.http_static.serve(req, res, { path: 'favicon.png' })
     }
 
-    @Get('assets/:path(.+)')
-    async assets(req: TpRequest, res: TpResponse, args: PathArgs<{ path: string }>) {
-        const path = args.ensure('path', Jtl.non_empty_string)
-        return this.http_static.serve(req, res, { path })
+    @Get('assets/:path+')
+    async assets(req: TpRequest, res: TpResponse) {
+        return this.http_static.serve(req, res, { path: req.path?.replace(/^\/assets\//, '') })
     }
 }
