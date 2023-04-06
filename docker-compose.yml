@@ -17,7 +17,7 @@ services:
       - ./server/lib:/home/code
       - ./node_modules:/home/node_modules
       - ./server/assets:/home/code/assets
-      - ./server/markdown:/home/code/markdown
+      - '${MARKDOWN_LOCAL_PATH}:/home/code/markdown'
       - ./server/node_modules:/home/code/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
     entrypoint:
