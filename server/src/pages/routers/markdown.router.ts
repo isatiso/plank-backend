@@ -1,32 +1,53 @@
-import { Get, PathArgs, TpResponse, TpRouter } from '@tarpit/http'
-import { Jtl } from '@tarpit/judge'
+import { ContentType, Get, PathArgs, TpRouter } from '@tarpit/http'
 import marked from 'marked'
-import { markdown_files } from '../markdown/markdown'
+import path from 'path'
 import { EjsTemplateService } from '../services/ejs-template.service'
+import { MarkdownDocumentService } from '../services/markdown-document.service'
 
-@TpRouter('/markdown', {})
+// marked.marked.setOptions({
+//     breaks: true
+// })
+
+@TpRouter('/marked', {})
 export class MarkdownRouter {
 
     constructor(
-        private ejs_template: EjsTemplateService,
+        private markdown_doc: MarkdownDocumentService,
+        private template: EjsTemplateService,
     ) {
+
     }
 
     @Get('')
-    async index(response: TpResponse) {
-        response.redirect('/markdown/main', 302)
+    @ContentType('text/html')
+    async index() {
+        return this.template.render('page_marked', {
+            title: 'Markdown',
+            breadcrumb: [],
+            articles: this.markdown_doc.list_docs()
+        })
     }
 
-    @Get('main/:article_name')
-    async main(response: TpResponse, args: PathArgs<{ article_name: string }>) {
-        const article_name = args.ensure('article_name', Jtl.string)
-        response.content_type = 'text/html'
-        if (!markdown_files[article_name]) {
-            response.redirect('/ejs/404', 302)
+    @Get(':paths+')
+    @ContentType('text/html')
+    async article(args: PathArgs<{ paths: string[] }>) {
+        const paths = args.get('paths', []).map(p => decodeURI(p))
+        const file = this.markdown_doc.search_file(paths)
+        if (file.type === 'dir') {
+            const breadcrumb = this.markdown_doc.make_breadcrumb(path.join('marked', file.path))
+            return this.template.render('page_marked', {
+                title: 'Markdown',
+                breadcrumb,
+                articles: this.markdown_doc.list_docs(file.path)
+            })
+        } else {
+            const file_content = await this.markdown_doc.get_file(path.join('markdown', file.path))
+            const breadcrumb = this.markdown_doc.make_breadcrumb(path.join('marked', file.path))
+            return this.template.render('page_article', {
+                title: 'Markdown',
+                breadcrumb,
+                markdown_content: marked.marked(file_content.toString('utf-8'))
+            })
         }
-        return this.ejs_template.render('page_marked', {
-            articles: Object.keys(markdown_files),
-            markdown_content: marked.marked(markdown_files[article_name])
-        })
     }
 }

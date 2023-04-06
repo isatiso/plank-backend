@@ -1,15 +1,20 @@
 import { TpRoot } from '@tarpit/core'
-import { EjsRouter } from './routers/ejs.router'
+import { HttpHooks } from '@tarpit/http'
+import { PageHttpHooks } from './hooks'
+import { MainPageRouter } from './routers/main-page.router'
 import { MarkdownRouter } from './routers/markdown.router'
 import { StaticRouter } from './routers/static.router'
 import { EjsTemplateService } from './services/ejs-template.service'
+import { MarkdownDocumentService } from './services/markdown-document.service'
 
 @TpRoot({
     providers: [
-        EjsTemplateService
+        EjsTemplateService,
+        MarkdownDocumentService,
+        { provide: HttpHooks, useClass: PageHttpHooks },
     ],
     entries: [
-        EjsRouter,
+        MainPageRouter,
         MarkdownRouter,
         StaticRouter,
     ]

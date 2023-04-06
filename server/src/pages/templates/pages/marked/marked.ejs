@@ -1,0 +1,30 @@
+<%- include('header') %>
+
+<main>
+    <% if (breadcrumb.length > 0) { %>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <% for (let i = 0; i < breadcrumb.length - 1; i++) { %>
+                    <li class="breadcrumb-item"><a href="/<%- breadcrumb[i].path %>"><%= breadcrumb[i].name %></a></li>
+                <% } %>
+                <li class="breadcrumb-item active"><%= breadcrumb[breadcrumb.length - 1].name %></li>
+            </ol>
+        </nav>
+    <% } %>
+    <div class="mb-4">
+        <div class="container p-0">
+            <h1>Markdown Contents</h1>
+            <p>Followed articles are rendered from the corresponding markdown document.</p>
+            <div class="list-group">
+                <% for (let i = 0; i < articles.length; i++) { %>
+                    <a class="list-group-item list-group-item-action" href="/marked/<%- articles[i].path %>">
+                        <%- articles[i].name %><%- articles[i].type === 'dir' ? ' /' : '' %></a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>
