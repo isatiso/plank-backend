@@ -3,6 +3,9 @@ import ejs from 'ejs'
 import page_error from '../templates/error.ejs'
 import page_about from '../templates/pages/about.ejs'
 import page_index from '../templates/pages/index.ejs'
+import page_comic_chapter from '../templates/pages/comic/chapter.ejs'
+import page_comic_book from '../templates/pages/comic/book.ejs'
+import page_comic from '../templates/pages/comic/index.ejs'
 
 import page_marked from '../templates/pages/marked/marked.ejs'
 import page_article from '../templates/pages/marked/article.ejs'
@@ -14,6 +17,9 @@ import header from '../templates/partials/header.ejs'
 import scripts from '../templates/partials/scripts.ejs'
 
 const TEMPLATE_MAP = {
+    page_comic_chapter,
+    page_comic_book,
+    page_comic,
     page_error,
     page_index,
     page_about,

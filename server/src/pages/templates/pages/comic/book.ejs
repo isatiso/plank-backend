@@ -1,0 +1,25 @@
+<%- include('header') %>
+
+<main>
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron">
+                <h1><%= name %></h1>
+            </div>
+        </div>
+    </div>
+    <div style="margin: 12px auto; display: flex; justify-content: center; align-items: center;">
+        <a class="btn btn-primary" href="/comic" role="button">主页</a>
+    </div>
+    <div class="container p-0">
+        <div class="list-group">
+            <% chapters.forEach(function(chapter) { %>
+                <a class="list-group-item list-group-item-action" href="/comic/chapter/<%- book_id %>/<%- chapter.chapter_id %>"><%= chapter.chapter_title %></a>
+            <% }); %>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

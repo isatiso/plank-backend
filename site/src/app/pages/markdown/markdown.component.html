@@ -1,0 +1,26 @@
+<main class="container mt-4">
+    <nav *ngIf="breadcrumb.length">
+        <ol class="breadcrumb">
+            <ng-container *ngFor="let item of breadcrumb; let last = last">
+                <li class="breadcrumb-item">
+                    <a *ngIf="!last" routerLink="/{{ item.path }}">{{ item.name }}</a>
+                    <ng-container *ngIf="last">{{ item.name }}</ng-container>
+                </li>
+            </ng-container>
+        </ol>
+    </nav>
+    <div class="mb-4">
+        <div *ngIf="marked_content" class="markdown-body m-0 p-lg-5 p-md-4 p-3" [innerHTML]="marked_content"></div>
+        <div *ngIf="articles.length">
+            <div class="container p-0">
+                <h1>Markdown Contents</h1>
+                <p>Followed articles are rendered from the corresponding markdown document.</p>
+                <div class="list-group">
+                    <a *ngFor="let article of articles" class="list-group-item list-group-item-action" routerLink="/marked/{{ article.path }}">
+                        {{ article.name }} {{ article.type === 'dir' ? ' /' : '' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,11 +1,13 @@
 import { Platform } from '@tarpit/core'
 import { HttpInspector, HttpServerModule } from '@tarpit/http'
 import { MongodbModule, TpMongoClientConfig } from '@tarpit/mongodb'
+import { ScheduleModule } from '@tarpit/schedule'
+import { isMainThread } from 'worker_threads'
 import { ApiRouterModule } from './apis/api-router.module'
+import { CommonModule } from './common/common.module'
+import { CrashLogMongo } from './common/mongo'
 import { plank_backend_config } from './config'
-import { PlankDataModule } from './data/data.module'
 import { PageRouterModule } from './pages/page-router.module'
-import { RootServiceModule } from './services/root-service.module'
 
 declare module '@tarpit/http' {
     export interface HttpCredentials {
@@ -19,15 +21,34 @@ declare module '@tarpit/mongodb' {
     }
 }
 
+
+
 const platform = new Platform(plank_backend_config)
     .import(HttpServerModule)
+    .import(ScheduleModule)
     .import(MongodbModule)
-    .import(PlankDataModule)
-    .import(RootServiceModule)
+    .import(CommonModule)
     .bootstrap(ApiRouterModule)
     .bootstrap(PageRouterModule)
 
 const inspector = platform.expose(HttpInspector)
-inspector?.list_router().forEach(item => console.log(`${item.method.padEnd(7, ' ')} ${item.path}`))
+const crash_log = platform.expose(CrashLogMongo)
+
+if (isMainThread) {
+    inspector?.list_router().forEach(item => console.log(`${item.method.padEnd(7, ' ')} ${item.path}`))
+}
 
 platform.start()
+
+process.on('uncaughtException', err => {
+    console.log('Caught exception: ' + err)
+    crash_log?.insertOne({
+        message: err.message,
+        stack: err.stack as string,
+        read: false,
+        created_at: Date.now()
+    }).catch(err => console.log(err))
+})
+
+process.on('SIGINT', () => platform.terminate())
+process.on('SIGTERM', () => platform.terminate())

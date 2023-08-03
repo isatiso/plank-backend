@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>值</mat-label>
+        <input matInput [(ngModel)]="data">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="dialog.close()">取消</button>
+    <button mat-button [mat-dialog-close]="data">确定</button>
+</div>

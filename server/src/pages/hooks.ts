@@ -1,12 +1,13 @@
 import { TpService } from '@tarpit/core'
 import { HttpContext, HttpHooks } from '@tarpit/http'
-import { create_log } from '../tools/logger'
+import { LoggerService } from '../common/services/logger.service'
 import { EjsTemplateService } from './services/ejs-template.service'
 
 @TpService({ inject_root: true })
 export class PageHttpHooks extends HttpHooks {
 
     constructor(
+        private logger: LoggerService,
         private template: EjsTemplateService,
     ) {
         super()
@@ -17,11 +18,11 @@ export class PageHttpHooks extends HttpHooks {
     }
 
     async on_finish(context: HttpContext): Promise<void> {
-        create_log(context)
+        await this.logger.write_request_log(context)
     }
 
     async on_error(context: HttpContext): Promise<void> {
-        create_log(context)
+        await this.logger.write_request_log(context)
         context.response.content_type = 'text/html'
         context.response.body = this.template.render('page_error', {
             title: context.response.message,

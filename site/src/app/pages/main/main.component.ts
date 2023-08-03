@@ -1,6 +1,9 @@
 import { Component } from '@angular/core'
 import { Subject, switchMap } from 'rxjs'
+import { AppService } from '../../app.service'
 import { DockerContainerApi } from '../../services/apis/docker-container.api'
+import { DockerContainerBrief } from 'plank-types'
+import { CdkTableDataSourceInput } from '@angular/cdk/table'
 
 @Component({
     selector: 'p-main',
@@ -10,9 +13,10 @@ import { DockerContainerApi } from '../../services/apis/docker-container.api'
 export class MainComponent {
 
     listDockerContainers$ = new Subject()
-    containers: any[] = []
+    containers: CdkTableDataSourceInput<DockerContainerBrief> = []
 
     constructor(
+        public app: AppService,
         private docker_container_api: DockerContainerApi,
     ) {
     }
@@ -20,7 +24,7 @@ export class MainComponent {
     ngOnInit() {
         this.listDockerContainers$.pipe(
             switchMap(() => this.docker_container_api.list_container())
-        ).subscribe(res => this.containers = res)
+        ).subscribe(res => this.containers = res.data)
         this.listDockerContainers$.next(null)
     }
 }

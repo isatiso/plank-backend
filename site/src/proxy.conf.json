@@ -1,0 +1,10 @@
+{
+    "/fonts": {
+        "target": "http://10.3.3.32:3001",
+        "secure": false
+    },
+    "/plank-environment": {
+        "target": "http://10.3.3.32:3000",
+        "secure": false
+    }
+}

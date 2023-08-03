@@ -2,12 +2,16 @@
     "name": "plank-site",
     "private": true,
     "author": "Cao Jiahang <sieglive@gmail.com>",
-    "scripts": {},
+    "scripts": {
+        "fonts": "rm -rf ./fonts && ts-node server/scripts/load-fonts.ts ./fonts",
+        "deploy": "lerna run deploy && docker compose up -d"
+    },
     "workspaces": [
         "server",
         "site"
     ],
     "devDependencies": {
-        "lerna": "^6.6.0"
+        "lerna": "^7.1.4",
+        "typescript": "^5.1.6"
     }
 }

@@ -1,0 +1,13 @@
+<div mat-dialog-title>通知</div>
+<div mat-dialog-content>
+    <ng-container *ngIf="data.raw; else pretty">
+        <pre class="mono-400 font-s"><ng-container *ngFor="let msg of data.message">{{ msg + '\n' }}</ng-container></pre>
+    </ng-container>
+    <ng-template #pretty>
+        <div *ngFor="let msg of data.message" style="font-size: 16px;">{{ msg }}</div>
+    </ng-template>
+
+    <div class="flex-start-center button-space" style="margin-top: 20px;">
+        <button (click)="dialogRef.close(data)" mat-raised-button color="primary">确定</button>
+    </div>
+</div>

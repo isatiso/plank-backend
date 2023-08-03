@@ -3,7 +3,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
-        "outDir": "./dist",
+        "outDir": "./lib",
         "declaration": false,
         "emitDecoratorMetadata": true,
         "esModuleInterop": true,
@@ -11,12 +11,20 @@
         "importHelpers": true,
         "jsx": "react",
         "jsxFactory": "tsx",
-        "module": "esnext",
+        "module": "ES2022",
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "sourceMap": false,
         "strict": true,
         "target": "es2019",
+        "lib": [
+            "ESNext"
+        ],
+        "paths": {
+            "plank-types": [
+                "../types"
+            ]
+        },
         "plugins": [
             {
                 "transform": "@tarpit/transformer",
@@ -24,7 +32,7 @@
                 "pattern": [
                     "**\/*.html",
                     "**\/*.ejs",
-                    "**\/*.md",
+                    "**\/*.md"
                 ]
             },
             {

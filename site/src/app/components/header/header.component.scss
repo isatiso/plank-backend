@@ -1,16 +1,29 @@
-.float {
-    position: fixed;
-    top: 0;
-    left: 0;
+.header {
+    //position: fixed;
+    //top: 0;
+    //left: 0;
     width: 100%;
+    z-index: 99;
+    background: white;
+    overflow: hidden;
+    height: 56px;
+
+    .menu, .signin {
+        @media (min-width: 600px) {
+            margin-left: auto;
+        }
+    }
 }
 
 .shadow {
-    height: 64px;
+    height: 56px;
     width: 100%;
 }
 
 .page-title {
+    margin: 0;
+    padding: 0;
+
     &:hover {
         cursor: pointer;
     }

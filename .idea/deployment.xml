@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="tarpit" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+  <component name="PublishConfigData" serverName="h1" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
-      <paths name="tarpit">
+      <paths name="h1">
         <serverdata>
           <mappings>
-            <mapping deploy="/plank-backend" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/code/plank-backend" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

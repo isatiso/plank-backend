@@ -9,6 +9,10 @@
 .cache/
 
 **/test.*
+/fonts
 
 .DS_Store
 package-lock.json
+
+server/markdown
+server/assets/jp
