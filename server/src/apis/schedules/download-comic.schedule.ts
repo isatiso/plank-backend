@@ -1,5 +1,4 @@
 import { Task, TpSchedule } from '@tarpit/schedule'
-import { ComicRecordMongo } from '../../common/mongo'
 import { ComicSpiderService } from '../../common/services/comic/comic-spider.service'
 import { ComicSyncStateService } from '../../common/services/comic/comic-sync-state.service'
 
@@ -9,7 +8,6 @@ export class DownloadComicSchedule {
     constructor(
         private comic_spider: ComicSpiderService,
         private sync_state: ComicSyncStateService,
-        private comic_record: ComicRecordMongo
     ) {
     }
 

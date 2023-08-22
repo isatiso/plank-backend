@@ -1,5 +1,6 @@
 import { TpRoot } from '@tarpit/core'
 import { HttpBodyFormatter, HttpHooks } from '@tarpit/http'
+import { DownloadComicSchedule } from './schedules/download-comic.schedule'
 import { BodyFormatter } from './services/body-formatter'
 import { AccountRouter } from './routers/account.router'
 import { BaseRouter } from './routers/base.router'
@@ -14,6 +15,7 @@ import { ApiHttpHooks } from './services/hooks'
         { provide: HttpHooks, useClass: ApiHttpHooks },
     ],
     entries: [
+        DownloadComicSchedule,
         AccountRouter,
         BaseRouter,
         DockerContainerRouter,
