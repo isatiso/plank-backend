@@ -1,7 +1,7 @@
 import { Platform } from '@tarpit/core'
 import { HttpInspector, HttpServerModule } from '@tarpit/http'
 import { MongodbModule, TpMongoClientConfig } from '@tarpit/mongodb'
-import { ScheduleModule } from '@tarpit/schedule'
+import { ScheduleInspector, ScheduleModule } from '@tarpit/schedule'
 import { isMainThread } from 'worker_threads'
 import { ApiRouterModule } from './apis/api-router.module'
 import { CommonModule } from './common/common.module'
@@ -32,10 +32,12 @@ const platform = new Platform(plank_backend_config)
     .bootstrap(PageRouterModule)
 
 const inspector = platform.expose(HttpInspector)
+const schedule = platform.expose(ScheduleInspector)
 const crash_log = platform.expose(CrashLogMongo)
 
 if (isMainThread) {
     inspector?.list_router().forEach(item => console.log(`${item.method.padEnd(7, ' ')} ${item.path}`))
+    schedule?.list_task().forEach(item => console.log(`${item.crontab.padEnd(16, ' ')} ${item.name}`))
 }
 
 platform.start()
