@@ -14,6 +14,10 @@ export class DownloadComicSchedule {
     @Task('*/5 * * * *', 'Download Comic')
     async download() {
         const content = await this.comic_spider.get_content()
+        const processing_count = content.books.filter(([book_id]) => this.sync_state.get(book_id)?.state === 'processing')?.length ?? 0
+        if (processing_count > 4) {
+            return
+        }
         const [book_id] = content.books.find(([book_id]) => (this.sync_state.get(book_id)?.state ?? 'idle') === 'idle') ?? []
         if (!book_id) {
             return
