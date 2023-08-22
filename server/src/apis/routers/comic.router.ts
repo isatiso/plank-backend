@@ -178,7 +178,7 @@ export class ComicRouter implements RestResponse<ComicResponse> {
             chapters_index: book_meta.chapters_index,
             chapters: Object.fromEntries(book_meta.chapters_index.map(chapter_id => [chapter_id, 0])),
         })
-        this._sync_from_remote(book_id, book_meta)
+        this.comic_spider.sync_from_remote(book_id, book_meta)
             .catch(err => console.log(err))
             .finally(() => {
                 if (this.sync_state.get(book_id).state === 'processing') {
@@ -186,35 +186,5 @@ export class ComicRouter implements RestResponse<ComicResponse> {
                 }
             })
         return { state: this.sync_state.get(book_id).state, ...book_meta, book_id }
-    }
-
-    private async _sync_from_remote(book_id: number, book_meta: BookMeta) {
-
-        const loaded_chapter_set = new Set<number>()
-        for (const chapter_id of book_meta.chapters_index) {
-            const chapter_meta = await this.comic_spider.get_images_of_chapter(book_id, chapter_id)
-            if (chapter_meta.all_image_loaded) {
-                loaded_chapter_set.add(chapter_id)
-                this.sync_state.update_chapter(book_id, chapter_id, 1)
-                continue
-            }
-            const loaded_image_set = new Set<string>()
-            const promises = chapter_meta.images_index.map(async name => {
-                const { image_path, image_url } = chapter_meta.images[name]
-                const loaded_image_path = await this.comic_spider.fetch_image(image_path, image_url)
-                loaded_image_set.add(loaded_image_path)
-                this.sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
-                return loaded_image_path
-            })
-            await Promise.all(promises)
-            chapter_meta.all_image_loaded = true
-            await this.comic_spider.write_metafile(chapter_meta)
-            loaded_chapter_set.add(chapter_id)
-            this.sync_state.update_book(book_id, loaded_chapter_set.size / book_meta.chapters_index.length)
-        }
-        book_meta.all_chapter_loaded = true
-        await this.comic_spider.write_metafile(book_meta)
-        this.sync_state.update_state(book_id, 'latest')
-        return book_meta
     }
 }
