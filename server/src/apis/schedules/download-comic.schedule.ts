@@ -5,6 +5,8 @@ import { ComicSyncStateService } from '../../common/services/comic/comic-sync-st
 @TpSchedule()
 export class DownloadComicSchedule {
 
+    current_check_book_index = 0
+
     constructor(
         private comic_spider: ComicSpiderService,
         private sync_state: ComicSyncStateService,
@@ -42,5 +44,15 @@ export class DownloadComicSchedule {
                 }
             })
         return
+    }
+
+    @Task('*/1 * * * *', 'Check Book Update')
+    async check_update() {
+        const content = await this.comic_spider.get_content()
+        if (!content.books[this.current_check_book_index]) {
+            this.current_check_book_index = 0
+        }
+        await this.comic_spider.get_chapters_of_book(content.books[this.current_check_book_index][0], 'update')
+        this.current_check_book_index += 1
     }
 }
