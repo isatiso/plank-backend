@@ -13,7 +13,7 @@ export class DownloadComicSchedule {
     ) {
     }
 
-    @Task('*/20 * * * *', 'Download Comic')
+    @Task('*/5 * * * *', 'Download Comic')
     async download() {
         const content = await this.comic_spider.get_content()
         const processing_count = content.books.filter(([book_id]) => this.sync_state.get(book_id)?.state === 'processing')?.length ?? 0
