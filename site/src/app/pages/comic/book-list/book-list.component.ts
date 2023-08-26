@@ -55,7 +55,7 @@ export class BookListComponent extends Base implements OnInit, OnDestroy {
         this.subscribeOverview$.next(null)
     }
 
-    map_color(type: 'photo' | 'gray' | 'color'): ThemePalette | undefined {
+    map_color(type: 'photo' | 'gray' | 'color' | 'boring'): ThemePalette | undefined {
         switch (type) {
             case 'color':
                 return 'accent'

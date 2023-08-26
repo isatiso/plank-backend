@@ -17,7 +17,7 @@ export class BookComponent extends Base implements OnInit, OnDestroy {
     book_name = ''
     state: 'idle' | 'processing' | 'latest' | undefined
     like: boolean = false
-    type: 'photo' | 'gray' | 'color' = 'color'
+    type: 'photo' | 'gray' | 'color' | 'boring' = 'color'
     chapter_list: ChapterBrief[] = []
     highlight_chapter = 0
     sync_state: SyncState | undefined
@@ -27,7 +27,7 @@ export class BookComponent extends Base implements OnInit, OnDestroy {
     syncFromRemote$ = new Subject<boolean>()
     getBookInfo$ = new Subject()
     like$ = new Subject<boolean>()
-    updateType$ = new Subject<'photo' | 'gray' | 'color'>()
+    updateType$ = new Subject<'photo' | 'gray' | 'color' | 'boring'>()
 
     constructor(
         public user: UserService,

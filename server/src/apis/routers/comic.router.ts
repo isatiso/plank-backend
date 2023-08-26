@@ -1,6 +1,6 @@
 import { Auth, Get, JsonBody, PathArgs, Post, TpRouter, TpWebSocket, WS } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
-import { BookMeta, ComicRecord, ComicResponse, ContentMeta, RestResponse } from 'plank-types'
+import {  ComicRecord, ComicResponse, ContentMeta, RestResponse } from 'plank-types'
 import process from 'process'
 import { ComicRecordMongo } from '../../common/mongo'
 import { ComicSpiderService } from '../../common/services/comic/comic-spider.service'
@@ -47,9 +47,9 @@ export class ComicRouter implements RestResponse<ComicResponse> {
         type: string
     }>) {
         const book_id = body.ensure('book_id', Jtl.non_zero_number)
-        const type = body.ensure('type', /^(photo|gray|color)$/)
+        const type = body.ensure('type', /^(photo|gray|color|boring)$/)
         const updater: Partial<ComicRecord> = { book_name: this.sync_state.get(book_id)?.book_name }
-        body.do_if('type', /^(photo|gray|color)$/, type => updater['type'] = type as any)
+        body.do_if('type', /^(photo|gray|color|boring)$/, type => updater['type'] = type as any)
         const res = await this.comic_record.updateOne({ book_id }, {
             $set: {
                 book_name: this.sync_state.get(book_id)?.book_name,

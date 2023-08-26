@@ -21,7 +21,7 @@ export interface AccountData {
 export interface ComicRecord {
     book_id: number
     book_name: string
-    type: 'photo' | 'gray' | 'color'
+    type: 'photo' | 'gray' | 'color' | 'boring'
     like: boolean
 }
 

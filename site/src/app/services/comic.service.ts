@@ -25,7 +25,7 @@ export type BookInfo = {
     book_id: number
     book_name: string
     state: string
-    type: 'photo' | 'gray' | 'color'
+    type: 'photo' | 'gray' | 'color' | 'boring'
     like: boolean
 }
 
@@ -78,7 +78,7 @@ export class ComicService {
         ).asObservable()
     }
 
-    update_type(book_id: number, type: 'photo' | 'gray' | 'color') {
+    update_type(book_id: number, type: 'photo' | 'gray' | 'color' | 'boring') {
         return this.http_client.post<ObjectData<ComicResponse['update_type']>>(
             environment.api_host + '/comic-data/update-type', { book_id, type })
     }

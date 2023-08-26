@@ -19,7 +19,14 @@
                     <mat-icon class="material-symbols-rounded" *ngIf="book.like">favorite</mat-icon>
                     <mat-icon class="material-symbols-rounded" *ngIf="overview_state[book.book_id]?.state === 'idle'">download</mat-icon>
                     <mat-icon class="material-symbols-rounded rotating" *ngIf="overview_state[book.book_id]?.state === 'processing'">progress_activity</mat-icon>
-                    <mat-icon [color]="map_color(book.type)" class="material-symbols-rounded" *ngIf="overview_state[book.book_id]?.state === 'latest'">check_small</mat-icon>
+                    <ng-container *ngIf="overview_state[book.book_id]?.state === 'latest'">
+                        <ng-container *ngIf="book.type=== 'boring'; else notBoring">
+                            <mat-icon class="material-symbols-rounded">check_indeterminate_small</mat-icon>
+                        </ng-container>
+                        <ng-template #notBoring>
+                            <mat-icon [color]="map_color(book.type)" class="material-symbols-rounded">check_small</mat-icon>
+                        </ng-template>
+                    </ng-container>
                 </li>
             </ng-container>
         </ul>
