@@ -190,14 +190,16 @@ export class ComicSpiderService {
                 continue
             }
             const loaded_image_set = new Set<string>()
-            const promises = chapter_meta.images_index.map(async name => {
-                const { image_path, image_url } = chapter_meta.images[name]
-                const loaded_image_path = await this.fetch_image(image_path, image_url)
-                loaded_image_set.add(loaded_image_path)
-                this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
-                return loaded_image_path
-            })
-            await Promise.all(promises)
+            for (let i = 0; i * 10 < chapter_meta.images_index.length; i++) {
+                const promises = chapter_meta.images_index.slice(i, (i + 1) * 10).map(async name => {
+                    const { image_path, image_url } = chapter_meta.images[name]
+                    const loaded_image_path = await this.fetch_image(image_path, image_url)
+                    loaded_image_set.add(loaded_image_path)
+                    this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
+                    return loaded_image_path
+                })
+                await Promise.all(promises)
+            }
             chapter_meta.all_image_loaded = true
             await this.write_metafile(chapter_meta)
             loaded_chapter_set.add(chapter_id)
