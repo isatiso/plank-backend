@@ -216,13 +216,12 @@ export class ComicSpiderService {
                 return loaded_image_path
             })
             const result_arr = await Promise.all(promises)
-            if (result_arr.some(path => !path)) {
-                throw new Error('Fetch image failed')
+            if (result_arr.every(path => path)) {
+                chapter_meta.all_image_loaded = true
+                await this.write_metafile(chapter_meta)
+                loaded_chapter_set.add(chapter_id)
+                this.comic_sync_state.update_book(book_id, loaded_chapter_set.size / book_meta.chapters_index.length)
             }
-            chapter_meta.all_image_loaded = true
-            await this.write_metafile(chapter_meta)
-            loaded_chapter_set.add(chapter_id)
-            this.comic_sync_state.update_book(book_id, loaded_chapter_set.size / book_meta.chapters_index.length)
         }
         book_meta.all_chapter_loaded = true
         await this.write_metafile(book_meta)
