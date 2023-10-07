@@ -207,9 +207,12 @@ export class ComicSpiderService {
             const loaded_image_set = new Set<string>()
             const promises = chapter_meta.images_index.map(async name => {
                 const { image_path, image_url } = chapter_meta.images[name]
-                const loaded_image_path = await this.fetch_image(image_path, image_url)
-                loaded_image_set.add(loaded_image_path)
-                this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
+                const exists = await this.exists(image_path)
+                const loaded_image_path = exists ? image_path : await this.fetch_image(image_path, image_url)
+                if (loaded_image_path) {
+                    loaded_image_set.add(loaded_image_path)
+                    this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
+                }
                 return loaded_image_path
             })
             const result_arr = await Promise.all(promises)
@@ -252,6 +255,14 @@ export class ComicSpiderService {
         return new Promise<Buffer>((resolve, reject) => {
             fs.readFile(filepath, (err, data) => {
                 err ? reject(err) : resolve(data)
+            })
+        })
+    }
+
+    private async exists(filepath: string): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            fs.stat(filepath, (err, stats) => {
+                err ? resolve(false) : stats.size > 0 ? resolve(true) : resolve(false)
             })
         })
     }
