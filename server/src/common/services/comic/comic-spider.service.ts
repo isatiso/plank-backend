@@ -6,12 +6,16 @@ import path from 'path'
 import { BookMeta, ChapterMeta, CommonMeta, ContentMeta } from 'plank-types'
 import { progress } from '../../../tools'
 import ua_list from '../../../user-agents.json'
+import { sleep } from '../../tools/async-tools'
 import { ComicSyncStateService } from './comic-sync-state.service'
 
 @TpService()
 export class ComicSpiderService {
+
     private base_url = process.env['COMIC_BASE_URL']
     private base_dir = process.env['COMIC_PATH']
+    private user_agent = this.choice(ua_list)
+    private fetching_pool: string[] = []
 
     constructor(
         private injector: Injector,
@@ -38,27 +42,43 @@ export class ComicSpiderService {
 
     async fetch_image(image_path: string, url: string): Promise<string> {
         console.log('fetching', url)
-        try {
-            const resp = await axios.get(url, {
-                headers: { 'User-Agent': this.choice(ua_list) },
-                proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
-                responseType: 'arraybuffer'
-            })
-            await this.write_file(image_path, resp.data)
-        } catch (e: any) {
-            console.log(`Fetch image failed: ${url}`, e)
-            if (e.response.status !== 404) {
-                throw e
+        let error: any = undefined
+        for (let i = 0; i < 5; i++) {
+            try {
+                const resp = await axios.get(url, {
+                    headers: { 'User-Agent': this.user_agent },
+                    proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
+                    responseType: 'arraybuffer'
+                })
+                await this.write_file(image_path, resp.data)
+            } catch (e: any) {
+                error = e
+                console.log(`Fetch image failed: ${url}`, e.message)
             }
+            await sleep(1000)
+        }
+        if (error) {
+            throw error
         }
         return image_path
+    }
+
+    async fetch_failed_image() {
+        for (let i = 0; i < 20; i++) {
+            const key = this.fetching_pool.shift()
+            if (!key) {
+                return
+            }
+            const [image_path, url] = key.split('::')
+            await this.fetch_image(image_path, url)
+        }
     }
 
     async fetch_remote(url: string): Promise<string> {
         console.log('fetching', url)
         try {
             return await axios.get(url, {
-                headers: { 'User-Agent': this.choice(ua_list) },
+                headers: { 'User-Agent': this.user_agent },
                 proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
             }).then(resp => resp.data)
         } catch (e) {
@@ -190,16 +210,14 @@ export class ComicSpiderService {
                 continue
             }
             const loaded_image_set = new Set<string>()
-            for (let i = 0; i * 10 < chapter_meta.images_index.length; i++) {
-                const promises = chapter_meta.images_index.slice(i, (i + 1) * 10).map(async name => {
-                    const { image_path, image_url } = chapter_meta.images[name]
-                    const loaded_image_path = await this.fetch_image(image_path, image_url)
-                    loaded_image_set.add(loaded_image_path)
-                    this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
-                    return loaded_image_path
-                })
-                await Promise.all(promises)
-            }
+            const promises = chapter_meta.images_index.map(async name => {
+                const { image_path, image_url } = chapter_meta.images[name]
+                const loaded_image_path = await this.fetch_image(image_path, image_url)
+                loaded_image_set.add(loaded_image_path)
+                this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
+                return loaded_image_path
+            })
+            await Promise.all(promises)
             chapter_meta.all_image_loaded = true
             await this.write_metafile(chapter_meta)
             loaded_chapter_set.add(chapter_id)
