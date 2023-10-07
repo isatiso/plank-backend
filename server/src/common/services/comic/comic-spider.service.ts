@@ -15,7 +15,6 @@ export class ComicSpiderService {
     private base_url = process.env['COMIC_BASE_URL']
     private base_dir = process.env['COMIC_PATH']
     private user_agent = this.choice(ua_list)
-    private fetching_pool: string[] = []
 
     constructor(
         private injector: Injector,
@@ -58,7 +57,7 @@ export class ComicSpiderService {
             await sleep(1000)
         }
         if (error) {
-            throw error
+            return ''
         }
         return image_path
     }
@@ -78,7 +77,7 @@ export class ComicSpiderService {
             }
         }
         if (error) {
-            throw error
+            return ''
         }
         return url
     }
@@ -213,7 +212,10 @@ export class ComicSpiderService {
                 this.comic_sync_state.update_chapter(book_id, chapter_id, loaded_image_set.size / chapter_meta.images_index.length)
                 return loaded_image_path
             })
-            await Promise.all(promises)
+            const result_arr = await Promise.all(promises)
+            if (result_arr.some(path => !path)) {
+                throw new Error('Fetch image failed')
+            }
             chapter_meta.all_image_loaded = true
             await this.write_metafile(chapter_meta)
             loaded_chapter_set.add(chapter_id)
