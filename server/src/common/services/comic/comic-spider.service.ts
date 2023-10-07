@@ -46,7 +46,7 @@ export class ComicSpiderService {
             try {
                 const resp = await axios.get(url, {
                     headers: { 'User-Agent': this.user_agent },
-                    proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
+                    proxy: { protocol: 'http', host: '10.3.3.1', port: 7890 },
                     responseType: 'arraybuffer'
                 })
                 await this.write_file(image_path, resp.data)
@@ -69,7 +69,7 @@ export class ComicSpiderService {
             try {
                 return await axios.get(url, {
                     headers: { 'User-Agent': this.user_agent },
-                    proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
+                    proxy: { protocol: 'http', host: '10.3.3.1', port: 7890 },
                 }).then(resp => resp.data)
             } catch (e: any) {
                 error = e
