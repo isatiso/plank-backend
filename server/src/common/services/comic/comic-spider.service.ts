@@ -223,10 +223,12 @@ export class ComicSpiderService {
                 this.comic_sync_state.update_book(book_id, loaded_chapter_set.size / book_meta.chapters_index.length)
             }
         }
-        book_meta.all_chapter_loaded = true
-        await this.write_metafile(book_meta)
-        this.comic_sync_state.update_state(book_id, 'latest')
-        return book_meta
+        if (loaded_chapter_set.size === book_meta.chapters_index.length) {
+            book_meta.all_chapter_loaded = true
+            await this.write_metafile(book_meta)
+            this.comic_sync_state.update_state(book_id, 'latest')
+            return book_meta
+        }
     }
 
     private choice<T>(list: T[]): T {
