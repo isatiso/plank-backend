@@ -6,7 +6,6 @@ import { ComicSyncStateService } from '../../common/services/comic/comic-sync-st
 export class DownloadComicSchedule {
 
     current_check_book_index = 0
-    private checking_images = false
 
     constructor(
         private comic_spider: ComicSpiderService,
@@ -55,20 +54,5 @@ export class DownloadComicSchedule {
         }
         await this.comic_spider.get_chapters_of_book(content.books[this.current_check_book_index][0], 'update')
         this.current_check_book_index += 1
-    }
-
-    @Task('*/5 * * * *', 'Check Failed Image')
-    async check_failed_image() {
-        if (this.checking_images) {
-            return
-        }
-        this.checking_images = true
-        try {
-            await this.comic_spider.fetch_failed_image()
-        } catch (e) {
-            console.log('check_failed_image', e)
-        } finally {
-            this.checking_images = false
-        }
     }
 }

@@ -53,7 +53,7 @@ export class ComicSpiderService {
                 await this.write_file(image_path, resp.data)
             } catch (e: any) {
                 error = e
-                console.log(`Fetch image failed: ${url}`, e.message)
+                console.log(`Fetch image failed: ${url}`, e?.message)
             }
             await sleep(1000)
         }
@@ -63,28 +63,24 @@ export class ComicSpiderService {
         return image_path
     }
 
-    async fetch_failed_image() {
-        for (let i = 0; i < 20; i++) {
-            const key = this.fetching_pool.shift()
-            if (!key) {
-                return
-            }
-            const [image_path, url] = key.split('::')
-            await this.fetch_image(image_path, url)
-        }
-    }
-
     async fetch_remote(url: string): Promise<string> {
         console.log('fetching', url)
-        try {
-            return await axios.get(url, {
-                headers: { 'User-Agent': this.user_agent },
-                proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
-            }).then(resp => resp.data)
-        } catch (e) {
-            console.log(`Fetch remote failed: ${url}`, e)
-            throw e
+        let error: any = undefined
+        for (let i = 0; i < 5; i++) {
+            try {
+                return await axios.get(url, {
+                    headers: { 'User-Agent': this.user_agent },
+                    proxy: { protocol: 'http', host: '10.11.12.4', port: 7890 },
+                }).then(resp => resp.data)
+            } catch (e: any) {
+                error = e
+                console.log(`Fetch remote failed: ${url}`, e?.message)
+            }
         }
+        if (error) {
+            throw error
+        }
+        return url
     }
 
     async get_content(force?: boolean): Promise<ContentMeta> {
