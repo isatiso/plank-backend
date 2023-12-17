@@ -1,3 +1,4 @@
+import { Disabled } from '@tarpit/core'
 import { Task, TpSchedule } from '@tarpit/schedule'
 import { ComicSpiderService } from '../../common/services/comic/comic-spider.service'
 import { ComicSyncStateService } from '../../common/services/comic/comic-sync-state.service'
@@ -13,6 +14,7 @@ export class DownloadComicSchedule {
     ) {
     }
 
+    @Disabled()
     @Task('*/30 * * * *', 'Download Comic')
     async download() {
         const content = await this.comic_spider.get_content()
@@ -46,6 +48,7 @@ export class DownloadComicSchedule {
         return
     }
 
+    @Disabled()
     @Task('*/3 * * * *', 'Check Book Update')
     async check_update() {
         const content = await this.comic_spider.get_content()

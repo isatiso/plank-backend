@@ -91,11 +91,14 @@ export class ComicSpiderService {
         const total_page = await this.get_total_page()
         const books: (readonly [number, string])[] = []
         for (const i of progress(total_page)) {
-            const data = await this.fetch_remote(this.base_url + `/booklist?page=${i + 1}`)
-            const content = parse(data).querySelector('ul.mh-list')
-                ?.querySelectorAll('li')
-                ?.map(li => li.querySelector('a'))
-                ?.map(a => [a?.getAttribute('href'), a?.getAttribute('title')])
+            const data = await this.fetch_remote(this.base_url + `/index.php/category/page/${i + 1}`)
+            const content = parse(data).querySelector('div.cate-comic-list')
+                ?.querySelectorAll('div.common-comic-item')
+                ?.map(div => {
+                    const link = div.querySelector('a.cover')?.getAttribute('href')
+                    const title = div.querySelector('p.comic__title a')?.textContent
+                    return [title, link]
+                })
                 ?.filter((link): link is [string, string] => !!link[0] && !!link[1])
                 ?.map(link => [+link[0].split('/').slice(-1)[0], link[1]] as const)
             if (content?.length) {
@@ -123,10 +126,10 @@ export class ComicSpiderService {
             return this.write_metafile<BookMeta>({ ...meta, meta_path, book_id })
         }
         const all_chapter_loaded = meta?.all_chapter_loaded ?? false
-        const data = await this.fetch_remote(this.base_url + `/book/${book_id}`)
-        const book_name = parse(data).querySelector('div.banner_detail_form div.info h1')?.textContent ?? 'Unknown'
-        const links = parse(data).querySelector('ul#detail-list-select')?.querySelectorAll('li')
-            ?.map(li => ({ name: li?.textContent?.trim(), link: li.querySelector('a')?.getAttribute('href') }))
+        const data = await this.fetch_remote(this.base_url + `/index.php/comic/${book_id}`)
+        const book_name = parse(data).querySelector('p.comic-title.j-comic-title')?.textContent ?? 'Unknown'
+        const links = parse(data).querySelector('ul.chapter__list-box.clearfix')?.querySelectorAll('li a.j-chapter-link')
+            ?.map(a => ({ name: a?.textContent?.trim(), link: a?.getAttribute('href') }))
         if (!links) {
             throw new Error('No chapter found')
         }
@@ -155,9 +158,8 @@ export class ComicSpiderService {
         if (meta?.all_image_loaded) {
             return this.write_metafile<ChapterMeta>({ ...meta, meta_path, book_id, chapter_id })
         }
-        const data = await this.fetch_remote(this.base_url + `/chapter/${chapter_id}`)
-        const links = parse(data).querySelector('div.comicpage')?.querySelectorAll('img')
-            ?.map(img => img.getAttribute('data-original'))
+        const data = await this.fetch_remote(this.base_url + `/index.php/chapter/${chapter_id}`)
+        const links = parse(data).querySelectorAll('img.lazy-read')?.map(img => img.getAttribute('data-original'))
             ?.filter((link): link is string => !!link)
         if (!links) {
             throw new Error('No image found')
@@ -186,7 +188,7 @@ export class ComicSpiderService {
     }
 
     async get_total_page() {
-        const data = await this.fetch_remote(this.base_url + `/booklist?page=1`)
+        const data = await this.fetch_remote(this.base_url + `/index.php/category/page/1`)
         const last_page_str = parse(data).querySelector('div.pagination')
             ?.querySelector('li:nth-last-child(2)')
             ?.querySelector('a')
