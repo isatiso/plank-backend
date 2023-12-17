@@ -4,7 +4,6 @@ import fs from 'fs'
 import { parse } from 'node-html-parser'
 import path from 'path'
 import { BookMeta, ChapterMeta, CommonMeta, ContentMeta } from 'plank-types'
-import { progress } from '../../../tools'
 import ua_list from '../../../user-agents.json'
 import { sleep } from '../../tools/async-tools'
 import { ComicSyncStateService } from './comic-sync-state.service'
@@ -89,24 +88,29 @@ export class ComicSpiderService {
             return meta
         }
         const total_page = await this.get_total_page()
-        const books: (readonly [number, string])[] = []
-        for (const i of progress(total_page)) {
+        const books: (readonly [string, string])[] = []
+        for (let i = 0; i < total_page; i++) {
             const data = await this.fetch_remote(this.base_url + `/index.php/category/page/${i + 1}`)
-            const content = parse(data).querySelector('div.cate-comic-list')
+            const a = parse(data).querySelector('div.cate-comic-list')
                 ?.querySelectorAll('div.common-comic-item')
-                ?.map(div => {
-                    const link = div.querySelector('a.cover')?.getAttribute('href')
-                    const title = div.querySelector('p.comic__title a')?.textContent
-                    return [title, link]
-                })
+
+            const content = a?.map(div => {
+                const link = div.querySelector('a.cover')?.getAttribute('href')
+                console.log('href', link)
+                const title = div.querySelector('p.comic__title a')?.textContent
+                return [link, title]
+            })
                 ?.filter((link): link is [string, string] => !!link[0] && !!link[1])
-                ?.map(link => [+link[0].split('/').slice(-1)[0], link[1]] as const)
+                ?.map(link => [link[0].split('/').slice(-1)[0], link[1]] as const)
+            console.log(content)
             if (content?.length) {
                 books.push(...content)
             }
         }
-        const book_ids = [...new Set(books.map(([id]) => id))].sort((a, b) => b - a)
+        const book_ids = [...new Set(books.map(([id]) => id))].sort((a, b) => a.localeCompare(b))
         const titles = Object.fromEntries(books)
+        console.log(book_ids)
+        console.log(titles)
         const content_meta = await this.write_metafile<ContentMeta>({
             meta_path,
             books: book_ids.map(id => [id, titles[id]]),
@@ -116,7 +120,7 @@ export class ComicSpiderService {
         return content_meta
     }
 
-    async get_chapters_of_book(book_id: number, mode?: 'update' | 'local_only'): Promise<BookMeta | undefined> {
+    async get_chapters_of_book(book_id: string, mode?: 'update' | 'local_only'): Promise<BookMeta | undefined> {
         const meta_path = `${this.base_dir}/${book_id}/metadata.json`
         const meta = await this.read_metafile<BookMeta>(meta_path)
         if (mode === 'local_only') {
@@ -152,7 +156,7 @@ export class ComicSpiderService {
         return this.write_metafile<BookMeta>({ meta_path, book_id, book_name, chapters, chapters_index, all_chapter_loaded })
     }
 
-    async get_images_of_chapter(book_id: number, chapter_id: number): Promise<ChapterMeta> {
+    async get_images_of_chapter(book_id: string, chapter_id: number): Promise<ChapterMeta> {
         const meta_path = `${this.base_dir}/${book_id}/${chapter_id}/metadata.json`
         const meta = await this.read_metafile<ChapterMeta>(meta_path)
         if (meta?.all_image_loaded) {
@@ -189,14 +193,11 @@ export class ComicSpiderService {
 
     async get_total_page() {
         const data = await this.fetch_remote(this.base_url + `/index.php/category/page/1`)
-        const last_page_str = parse(data).querySelector('div.pagination')
-            ?.querySelector('li:nth-last-child(2)')
-            ?.querySelector('a')
-            ?.textContent ?? '1'
+        const last_page_str = parse(data).querySelector('div#Pagination a.end')?.attrs['href'].split('/').slice(-1)[0] ?? '1'
         return +last_page_str
     }
 
-    async sync_from_remote(book_id: number, book_meta: BookMeta) {
+    async sync_from_remote(book_id: string, book_meta: BookMeta) {
 
         const loaded_chapter_set = new Set<number>()
         for (const chapter_id of book_meta.chapters_index) {

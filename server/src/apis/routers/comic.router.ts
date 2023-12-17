@@ -33,7 +33,7 @@ export class ComicRouter implements RestResponse<ComicResponse> {
 
     @WS('subscribe-book/:book_id')
     async subscribe_book(args: PathArgs<{ book_id: string }>, ws: TpWebSocket): Promise<void> {
-        const book_id = +args.ensure('book_id', Jtl.string)
+        const book_id = args.ensure('book_id', Jtl.string)
         const subscription = this.sync_state.subscribe_book(book_id, msg => ws.send(JSON.stringify(msg)))
         ws.on('error', _ => ws.terminate())
         ws.on('close', _ => subscription.unsubscribe())
@@ -43,10 +43,10 @@ export class ComicRouter implements RestResponse<ComicResponse> {
     @Auth()
     @Post('update-type')
     async update_type(body: JsonBody<{
-        book_id: number
+        book_id: string
         type: string
     }>) {
-        const book_id = body.ensure('book_id', Jtl.non_zero_number)
+        const book_id = body.ensure('book_id', Jtl.string)
         const type = body.ensure('type', /^(photo|gray|color|boring)$/)
         const updater: Partial<ComicRecord> = { book_name: this.sync_state.get(book_id)?.book_name }
         body.do_if('type', /^(photo|gray|color|boring)$/, type => updater['type'] = type as any)
@@ -66,10 +66,10 @@ export class ComicRouter implements RestResponse<ComicResponse> {
     @Auth()
     @Post('like')
     async like(body: JsonBody<{
-        book_id: number
+        book_id: string
         value: boolean
     }>) {
-        const book_id = body.ensure('book_id', Jtl.non_zero_number)
+        const book_id = body.ensure('book_id', Jtl.string)
         const value = body.ensure('value', Jtl.boolean)
         const res = await this.comic_record.updateOne({ book_id }, {
             $set: { book_name: this.sync_state.get(book_id)?.book_name, like: value }
@@ -102,7 +102,7 @@ export class ComicRouter implements RestResponse<ComicResponse> {
     async book(args: PathArgs<{
         book_id: string
     }>) {
-        const book_id = +args.ensure('book_id', Jtl.string)
+        const book_id = args.ensure('book_id', Jtl.string)
         if (!this.sync_state.get(book_id)) {
             await this.comic_spider.refresh()
         }
@@ -128,7 +128,7 @@ export class ComicRouter implements RestResponse<ComicResponse> {
         book_id: string
         chapter_id: string
     }>) {
-        const book_id = +args.ensure('book_id', Jtl.string)
+        const book_id = args.ensure('book_id', Jtl.string)
         const chapter_id = +args.ensure('chapter_id', Jtl.string)
         const content = await this.comic_spider.get_images_of_chapter(book_id, chapter_id)
         return {
@@ -152,10 +152,10 @@ export class ComicRouter implements RestResponse<ComicResponse> {
     @Auth()
     @Post('sync-from-remote')
     async sync_from_remote(body: JsonBody<{
-        book_id: number
+        book_id: string
         update: boolean
     }>) {
-        const book_id = body.ensure('book_id', Jtl.non_zero_number)
+        const book_id = body.ensure('book_id', Jtl.string)
         const update = body.ensure('update', Jtl.boolean)
         const current_state = this.sync_state.get(book_id)
         if (!update) {

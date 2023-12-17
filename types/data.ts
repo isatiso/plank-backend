@@ -19,7 +19,7 @@ export interface AccountData {
 }
 
 export interface ComicRecord {
-    book_id: number
+    book_id: string
     book_name: string
     type: 'photo' | 'gray' | 'color' | 'boring'
     like: boolean

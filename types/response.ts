@@ -87,7 +87,7 @@ export type ComicResponse = {
     chapter: ChapterMeta
     sync_content: ContentMeta
     sync_from_remote: {
-        book_id: number
+        book_id: string
         book_name: string
         state: SyncStateData['state'] | 'unknown'
         detail?: SyncStateData

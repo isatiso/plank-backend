@@ -3,7 +3,7 @@ import { ComicRecord } from './data'
 export type SyncState = 'idle' | 'processing' | 'latest'
 
 export interface SyncStateData {
-    book_id: number
+    book_id: string
     book_name: string
     state: SyncState
     chapters_index: number[]
@@ -30,12 +30,12 @@ export type ImageBrief = {
 }
 
 export interface ContentMeta extends CommonMeta {
-    books: [book_id: number, book_name: string][]
+    books: [book_id: string, book_name: string][]
     last_updated: number
 }
 
 export interface BookMeta extends CommonMeta {
-    book_id: number
+    book_id: string
     book_name: string
     chapters_index: number[]
     all_chapter_loaded: boolean
@@ -43,7 +43,7 @@ export interface BookMeta extends CommonMeta {
 }
 
 export interface ChapterMeta extends CommonMeta {
-    book_id: number
+    book_id: string
     chapter_id: number
     images_index: string[]
     all_image_loaded: boolean
