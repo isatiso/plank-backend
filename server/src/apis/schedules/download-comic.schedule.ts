@@ -14,7 +14,6 @@ export class DownloadComicSchedule {
     ) {
     }
 
-    @Disabled()
     @Task('*/30 * * * *', 'Download Comic')
     async download() {
         const content = await this.comic_spider.get_content()
@@ -48,7 +47,6 @@ export class DownloadComicSchedule {
         return
     }
 
-    @Disabled()
     @Task('*/3 * * * *', 'Check Book Update')
     async check_update() {
         const content = await this.comic_spider.get_content()
