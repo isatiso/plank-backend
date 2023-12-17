@@ -18,11 +18,11 @@ export class DownloadComicSchedule {
     @Task('*/30 * * * *', 'Download Comic')
     async download() {
         const content = await this.comic_spider.get_content()
-        const processing_count = content.books.filter(([book_id]) => this.sync_state.get(book_id)?.state === 'processing')?.length ?? 0
+        const processing_count = content.books_index.filter(([book_id]) => this.sync_state.get(book_id)?.state === 'processing')?.length ?? 0
         if (processing_count > 4) {
             return
         }
-        const [book_id] = content.books.find(([book_id]) => (this.sync_state.get(book_id)?.state ?? 'idle') === 'idle') ?? []
+        const [book_id] = content.books_index.find(([book_id]) => (this.sync_state.get(book_id)?.state ?? 'idle') === 'idle') ?? []
         if (!book_id) {
             return
         }
@@ -52,10 +52,10 @@ export class DownloadComicSchedule {
     @Task('*/3 * * * *', 'Check Book Update')
     async check_update() {
         const content = await this.comic_spider.get_content()
-        if (!content.books[this.current_check_book_index]) {
+        if (!content.books_index[this.current_check_book_index]) {
             this.current_check_book_index = 0
         }
-        await this.comic_spider.get_chapters_of_book(content.books[this.current_check_book_index][0], 'update')
+        await this.comic_spider.get_chapters_of_book(content.books_index[this.current_check_book_index], 'update')
         this.current_check_book_index += 1
     }
 }

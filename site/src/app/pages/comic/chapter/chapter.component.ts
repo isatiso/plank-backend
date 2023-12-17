@@ -12,13 +12,13 @@ import { environment } from '../../../../environments/environment'
 })
 export class ChapterComponent extends Base implements OnInit, OnDestroy {
     book_id = ''
-    chapter_id = 0
+    chapter_id = ''
     book_name = ''
     chapter_name = ''
-    chapters_index: number[] = []
+    chapters_index: string[] = []
     image_list: { image_path: string }[] = []
-    prev_chapter = 0
-    next_chapter = 0
+    prev_chapter = ''
+    next_chapter = ''
     show_overlay = true
 
     getBookInfo$ = new Subject()
@@ -35,8 +35,8 @@ export class ChapterComponent extends Base implements OnInit, OnDestroy {
     figure_out_around() {
         const index = this.chapters_index.findIndex(ch => ch === this.chapter_id)
         if (index === -1) {
-            this.prev_chapter = 0
-            this.next_chapter = 0
+            this.prev_chapter = ''
+            this.next_chapter = ''
         } else {
             this.prev_chapter = this.chapters_index[index - 1] ?? 0
             this.next_chapter = this.chapters_index[index + 1] ?? 0
@@ -69,7 +69,7 @@ export class ChapterComponent extends Base implements OnInit, OnDestroy {
         this.route.paramMap.pipe(
             takeUntil(this.destroy$),
             tap(params => this.book_id = params.get('book_id')!),
-            tap(params => this.chapter_id = +params.get('chapter_id')!),
+            tap(params => this.chapter_id = params.get('chapter_id')!),
             tap(() => this.getBookInfo$.next(null)),
             tap(() => this.getChapterInfo$.next(null)),
             tap(() => this.scroll_top('instant')),

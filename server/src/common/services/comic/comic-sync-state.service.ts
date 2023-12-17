@@ -32,7 +32,7 @@ export class ComicSyncStateService {
         this.send_book_state(book_id)
     }
 
-    update_chapter(book_id: string, chapter_id: number, progress: number) {
+    update_chapter(book_id: string, chapter_id: string, progress: number) {
         this.data[book_id].chapters[chapter_id] = progress
         this.send_book_state(book_id)
     }

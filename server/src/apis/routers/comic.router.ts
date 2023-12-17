@@ -1,6 +1,6 @@
 import { Auth, Get, JsonBody, PathArgs, Post, TpRouter, TpWebSocket, WS } from '@tarpit/http'
 import { Jtl } from '@tarpit/judge'
-import {  ComicRecord, ComicResponse, ContentMeta, RestResponse } from 'plank-types'
+import { ComicRecord, ComicResponse, ContentMeta, RestResponse } from 'plank-types'
 import process from 'process'
 import { ComicRecordMongo } from '../../common/mongo'
 import { ComicSpiderService } from '../../common/services/comic/comic-spider.service'
@@ -87,11 +87,11 @@ export class ComicRouter implements RestResponse<ComicResponse> {
         const content = await this.comic_spider.get_content()
         const record_list = await this.comic_record.find({}).toArray()
         const records = Object.fromEntries(record_list.map(r => [r.book_id, r]))
-        const books = content.books.map(([book_id, book_name]) => ({
+        const books = content.books_index.map(book_id => ({
             type: records[book_id]?.type ?? 'color',
             like: records[book_id]?.like ?? false,
             book_id,
-            book_name,
+            book_name: content.books[book_id].book_name,
             state: this.sync_state.get(book_id)?.state ?? 'idle',
         }))
         return { books }
@@ -129,12 +129,17 @@ export class ComicRouter implements RestResponse<ComicResponse> {
         chapter_id: string
     }>) {
         const book_id = args.ensure('book_id', Jtl.string)
-        const chapter_id = +args.ensure('chapter_id', Jtl.string)
+        const chapter_id = args.ensure('chapter_id', Jtl.string)
         const content = await this.comic_spider.get_images_of_chapter(book_id, chapter_id)
         return {
-            ...content,
             book_id,
             chapter_id,
+            chapter_name: content?.chapter_name ?? '',
+            images_index: content?.images_index ?? [],
+            all_image_loaded: content?.all_image_loaded ?? false,
+            images: content?.images ?? {},
+            updated_at: content?.updated_at ?? 0,
+            meta_path: '',
         }
     }
 

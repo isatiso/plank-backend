@@ -19,7 +19,7 @@ export class BookComponent extends Base implements OnInit, OnDestroy {
     like: boolean = false
     type: 'photo' | 'gray' | 'color' | 'boring' = 'color'
     chapter_list: ChapterBrief[] = []
-    highlight_chapter = 0
+    highlight_chapter = ''
     sync_state: SyncState | undefined
     waiting_for_sync = false
 
@@ -90,7 +90,7 @@ export class BookComponent extends Base implements OnInit, OnDestroy {
         ).subscribe()
         this.route.queryParams.pipe(
             takeUntil(this.destroy$),
-            tap(params => this.highlight_chapter = +params['highlight_chapter']),
+            tap(params => this.highlight_chapter = params['highlight_chapter']),
         ).subscribe()
         this.route.paramMap.pipe(
             takeUntil(this.destroy$),

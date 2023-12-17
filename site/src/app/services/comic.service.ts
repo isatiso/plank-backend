@@ -2,21 +2,21 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { Params, Router } from '@angular/router'
+import type { ComicResponse, ComicSubscribe } from 'plank-types'
+import { ObjectData } from 'plank-types'
 import { BehaviorSubject, filter, map, Observable, Subject, tap } from 'rxjs'
 import { webSocket } from 'rxjs/webSocket'
 import { environment } from '../../environments/environment'
 import { EditPageComponent } from '../pages/comic/book-list/edit-page/edit-page.component'
-import type { ComicResponse, ComicSubscribe } from 'plank-types'
-import { ObjectData } from 'plank-types'
 
 // type PlankResponse = any
 export interface SyncState {
     book_id: string
     book_name: string
     state: 'idle' | 'processing' | 'latest'
-    chapters_index: number[]
+    chapters_index: string[]
     chapter_progress: number
-    chapters: Record<number, number>
+    chapters: Record<string, number>
 }
 
 export type SyncStateOverview = Record<string, Pick<SyncState, 'book_id' | 'book_name' | 'state'>>
@@ -108,7 +108,7 @@ export class ComicService {
         )
     }
 
-    fetch_chapter(book_id: string, chapter_id: number) {
+    fetch_chapter(book_id: string, chapter_id: string) {
         return this.http_client.get<{
             data: {
                 book_id: string
@@ -117,6 +117,7 @@ export class ComicService {
                 images: Record<string, {
                     image_path: string
                     image_url: string
+                    image_id: string
                 }>
             }
         }>(environment.api_host + `/comic-data/chapter/${book_id}/${chapter_id}`).pipe(

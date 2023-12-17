@@ -1,7 +1,7 @@
-import { BookInfo, ChapterMeta, ContentMeta, SyncStateData, SyncStateOverview } from './comic'
+import { BookInfo, ChapterBrief, ChapterMeta, ContentMeta, SyncStateData, SyncStateOverview } from './comic'
 import { AccountData } from './data'
-import { MarkdownDataArticle, MarkdownDataContent } from './markdown-data'
 import { DockerContainerBrief } from './docker'
+import { MarkdownDataArticle, MarkdownDataContent } from './markdown-data'
 
 // export type ArrayResponse<T extends (...args: any) => Array<any> | Promise<Array<any>>> = {
 //     type: 'array',
@@ -91,12 +91,8 @@ export type ComicResponse = {
         book_name: string
         state: SyncStateData['state'] | 'unknown'
         detail?: SyncStateData
-        chapters?: Record<number, {
-            chapter_url: string
-            chapter_name: string
-            chapter_id: number
-        }>
-        chapters_index?: number[]
+        chapters?: Record<string, ChapterBrief>
+        chapters_index?: string[]
     }
 }
 
