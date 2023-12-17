@@ -25,7 +25,7 @@ export class HtmlParserV1Service implements HtmlParserInterface {
             ?.map(link => ({
                 book_id: link[0].split('/').slice(-1)[0],
                 book_name: link[1],
-                book_url: link[0]
+                book_url: this.base_url + link[0]
             } as BookBrief)) ?? []
     }
 
@@ -34,7 +34,7 @@ export class HtmlParserV1Service implements HtmlParserInterface {
             ?.map(a => ({
                 chapter_id: a.getAttribute('href')?.split('/').slice(-1)[0],
                 chapter_name: a.textContent?.trim(),
-                chapter_url: a.getAttribute('href')
+                chapter_url: this.base_url + (a.getAttribute('href') ?? ''),
             }))
             ?.filter((c): c is ChapterBrief => !!c.chapter_id && !!c.chapter_name && !!c.chapter_url) ?? []
     }
