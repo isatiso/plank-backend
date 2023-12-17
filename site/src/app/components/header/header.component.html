@@ -1,17 +1,27 @@
-<div class="float">
-    <mat-toolbar>
-        <div style="margin-left: 24px;">
-            <h4 class="page-title" routerLink="/">板蓝根的技术笔记（施工中。。。）</h4>
+<div class="container">
+    <div class="header d-flex justify-content-between align-items-center">
+        <div routerLink="/" style="cursor: pointer; display: inline-flex; align-items: center; margin-right: 12px;">
+            <img alt="" height="32" ngSrc="/favicon.svg" width="32"/>
+            <span *ngIf="!app.small" style="margin-left: 12px; font-weight: bold;">板蓝根的技术笔记</span>
         </div>
-        <button mat-button routerLink="/main">Home</button>
-        <button mat-button routerLink="/about">About</button>
-        <span style="margin-right: auto;"></span>
-        <button mat-icon-button>
-            <mat-icon>favorite</mat-icon>
+        <span *ngIf="app.small" style="margin-left: 12px; font-weight: bold;">板蓝根的技术笔记</span>
+        <ng-container *ngIf="!app.small">
+            <button mat-button routerLink="/marked">Markdown</button>
+            <button *ngIf="show_comic" mat-button routerLink="/comic">Comic</button>
+            <button mat-button routerLink="/about">About</button>
+        </ng-container>
+        <button *ngIf="!app.small && !user.token" class="signin" mat-button routerLink="/auth/signin">登录</button>
+        <button *ngIf="app.small || user.token" class="menu" [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>menu</mat-icon>
         </button>
-        <button mat-icon-button>
-            <mat-icon>share</mat-icon>
-        </button>
-    </mat-toolbar>
+    </div>
 </div>
-<div class="shadow"></div>
+<mat-menu #menu="matMenu">
+    <ng-container *ngIf="app.small">
+        <button *ngIf="!user.token" mat-menu-item routerLink="/auth/signin">登录</button>
+        <button mat-menu-item routerLink="/marked">Markdown</button>
+        <button *ngIf="show_comic" mat-menu-item routerLink="/comic">Comic</button>
+        <button mat-menu-item routerLink="/about">About</button>
+    </ng-container>
+    <button *ngIf="user.token" mat-menu-item (click)="user.clear_info()" routerLink="/auth/signin">退出</button>
+</mat-menu>

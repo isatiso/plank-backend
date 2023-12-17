@@ -1,0 +1,49 @@
+<%- include('header') %>
+
+<main>
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron">
+                <h1><a href="/comic/book/<%- book_id %>" role="button"><%= name %></a></h1>
+                <p><%= chapter.chapter_title %></p>
+            </div>
+        </div>
+    </div>
+    <div style="width: 100%; max-width: 600px; margin: 0 auto">
+        <div style="margin: 12px auto; display: flex; justify-content: space-between; align-items: center;">
+            <% if (prev) { %>
+                <a class="btn btn-primary" href="/comic/chapter/<%- book_id %>/<%- prev.chapter_id %>" role="button">上一章</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">上一章</a>
+            <% } %>
+            <a class="btn btn-primary" href="/comic/book/<%- book_id %>" role="button">目录</a>
+            <% if (next) { %>
+                <a class="btn btn-primary" href="/comic/chapter/<%- book_id %>/<%- next.chapter_id %>" role="button">下一章</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">下一章</a>
+            <% } %>
+        </div>
+        <div>
+            <% images_index.forEach(function(image_name) { %>
+                <img src="http://10.3.3.32/comic/<%- images[image_name].image_path %>" alt="" style="width: 100%"/>
+            <% }); %>
+        </div>
+        <div style="margin: 12px auto; display: flex; justify-content: space-between; align-items: center;">
+            <% if (prev) { %>
+                <a class="btn btn-primary" href="/comic/chapter/<%- book_id %>/<%- prev.chapter_id %>" role="button">上一章</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">上一章</a>
+            <% } %>
+            <a class="btn btn-primary" href="/comic/book/<%- book_id %>" role="button">目录</a>
+            <% if (next) { %>
+                <a class="btn btn-primary" href="/comic/chapter/<%- book_id %>/<%- next.chapter_id %>" role="button">下一章</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">下一章</a>
+            <% } %>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

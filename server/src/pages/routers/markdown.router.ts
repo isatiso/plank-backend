@@ -1,12 +1,8 @@
 import { ContentType, Get, PathArgs, TpRouter } from '@tarpit/http'
-import marked from 'marked'
+import * as marked from 'marked'
 import path from 'path'
+import { MarkdownDocumentService } from '../../common/services/markdown-document.service'
 import { EjsTemplateService } from '../services/ejs-template.service'
-import { MarkdownDocumentService } from '../services/markdown-document.service'
-
-// marked.marked.setOptions({
-//     breaks: true
-// })
 
 @TpRouter('/marked', {})
 export class MarkdownRouter {

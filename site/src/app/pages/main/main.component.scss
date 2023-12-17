@@ -3,12 +3,10 @@
 }
 
 .jumbotron {
-    position: absolute;
-    width: 720px;
+    max-width: 720px;
+    width: 100%;
     height: 600px;
     color: white;
-    box-sizing: border-box;
-    padding: 24px;
 
     &.light {
         color: #444;

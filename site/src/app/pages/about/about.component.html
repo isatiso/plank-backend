@@ -1,1 +1,20 @@
-<p>about works!</p>
+<div class="container">
+    <mat-form-field appearance="fill">
+        <mat-label>Input</mat-label>
+        <input matInput [(ngModel)]="value">
+    </mat-form-field>
+    <div>{{ ip }}</div>
+
+    <div>
+        <button mat-raised-button color="primary" (click)="test()">http</button>
+        <button mat-raised-button color="primary" (click)="test2()">socket</button>
+        <button mat-raised-button color="primary" (click)="updateRecord$.next(null)">update</button>
+        <button mat-raised-button color="primary" (click)="popup_input()">popup</button>
+    </div>
+
+    <div>{{input_value}}</div>
+
+    <div>
+        <pre><code>{{ messages | json }}</code></pre>
+    </div>
+</div>

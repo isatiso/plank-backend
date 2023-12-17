@@ -1,0 +1,51 @@
+<div style="display: flex; justify-content: flex-start; align-items: center;">
+    <div style="margin-right: auto;">书籍列表</div>
+    <div>
+        <button (click)="refresh$.next(undefined)" mat-icon-button style="background-color: white;">
+            <mat-icon>autorenew</mat-icon>
+        </button>
+        <button (click)="comic.search_book()" mat-icon-button style="background-color: white;">
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+</div>
+<ng-container *ngIf="comic.all_book_list.length; else bravo">
+    <div class="container p-0">
+        <ul class="list-group list-group-flush">
+            <ng-container *ngFor="let book of comic.bookList$ | async">
+                <li [class.highlight]="this.highlight_book === book.book_id" class="list-group-item list-group-item"
+                    style="display: flex; justify-content: flex-start; align-items: center; gap: 6px" routerLink="/comic/book/{{ book.book_id }}">
+                    <div style="margin-right: auto; cursor: pointer; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ book.book_name }}</div>
+                    <mat-icon class="material-symbols-rounded" *ngIf="book.like">favorite</mat-icon>
+                    <mat-icon class="material-symbols-rounded" *ngIf="overview_state[book.book_id]?.state === 'idle'">download</mat-icon>
+                    <mat-icon class="material-symbols-rounded rotating" *ngIf="overview_state[book.book_id]?.state === 'processing'">progress_activity</mat-icon>
+                    <ng-container *ngIf="overview_state[book.book_id]?.state === 'latest'">
+                        <ng-container *ngIf="book.type=== 'boring'; else notBoring">
+                            <mat-icon class="material-symbols-rounded">check_indeterminate_small</mat-icon>
+                        </ng-container>
+                        <ng-template #notBoring>
+                            <mat-icon [color]="map_color(book.type)" class="material-symbols-rounded">check_small</mat-icon>
+                        </ng-template>
+                    </ng-container>
+                </li>
+            </ng-container>
+        </ul>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-slider [max]="comic.total_page" discrete="true" min="1" step="1" style="width: 90%; max-width: 560px">
+                <input (ngModelChange)="bufferPageChange$.next($event)" [ngModel]="comic.page" matSliderThumb>
+            </mat-slider>
+        </div>
+        <div style="margin: 12px auto; display: flex; justify-content: space-between; align-items: center;">
+            <button (click)="comic.go_last_page()" [disabled]="comic.page <= 1" color="primary" mat-raised-button>上一页</button>
+            <div>{{ comic.page }} / {{ comic.total_page }}</div>
+            <button (click)="comic.go_next_page()" [disabled]="comic.page >= comic.total_page" color="primary" mat-raised-button>下一页</button>
+        </div>
+    </div>
+</ng-container>
+<ng-template #bravo>
+    <div class="container p-0">
+        <div class="alert alert-warning" role="alert">
+            暂无书籍
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,36 @@
+<%- include('header') %>
+
+<main>
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron">
+                <h1>This is great</h1>
+                <p>Welcome to templating using EJS</p>
+            </div>
+        </div>
+    </div>
+    <div class="container p-0">
+        <div class="list-group">
+            <% books.forEach(function(book) { %>
+                <a class="list-group-item list-group-item-action" href="/comic/book/<%- book[0] %>"><%= book[1] %></a>
+            <% }); %>
+        </div>
+        <div style="margin: 12px auto; display: flex; justify-content: space-between; align-items: center;">
+            <% if (has_prev) { %>
+                <a class="btn btn-primary" href="/comic/<%- prev %>" role="button">上一页</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">上一页</a>
+            <% } %>
+                <%= page %> / <%= total_pages %>
+            <% if (has_next) { %>
+                    <a class="btn btn-primary" href="/comic/<%- next %>" role="button">下一页</a>
+            <% } else { %>
+                <a class="btn disabled" href="#" role="button">下一页</a>
+            <% } %>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <%- include('footer') %>
+</footer>

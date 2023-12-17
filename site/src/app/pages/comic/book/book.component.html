@@ -1,0 +1,65 @@
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 0">
+    <button (click)="comic.go_page_of_book(book_id)" mat-button>
+        <mat-icon>arrow_back</mat-icon>
+        回书籍列表
+    </button>
+</div>
+
+<div class="title">
+    <div class="text">{{ book_name }}</div>
+    <div class="action">
+        <mat-icon class="material-symbols-rounded rotating" *ngIf="waiting_for_sync">progress_activity</mat-icon>
+        <button *ngIf="user.token" [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon class="material-symbols-rounded">settings</mat-icon>
+        </button>
+    </div>
+</div>
+
+<div *ngIf="state !== 'idle'; else downloadGuide" style="margin-bottom: 24px;">
+    <ng-container *ngTemplateOutlet="chapterList"></ng-container>
+</div>
+
+<mat-menu #menu="matMenu">
+    <button (click)="syncFromRemote$.next(true)" mat-menu-item>更新</button>
+    <button *ngIf="!like" (click)="like$.next(true)" mat-menu-item>喜欢</button>
+    <button *ngIf="like" (click)="like$.next(false)" mat-menu-item>不喜欢</button>
+    <button [matMenuTriggerFor]="markMenu" mat-menu-item>标记为</button>
+</mat-menu>
+
+<mat-menu #markMenu="matMenu">
+    <button (click)="updateType$.next( 'gray')" mat-menu-item>黑白</button>
+    <button (click)="updateType$.next( 'photo')" mat-menu-item>照片</button>
+    <button (click)="updateType$.next( 'color')" mat-menu-item>彩色</button>
+    <button (click)="updateType$.next( 'boring')" mat-menu-item>无聊</button>
+</mat-menu>
+
+<ng-template #chapterList>
+    <ul class="list-group">
+        <li *ngFor="let info of chapter_list;" [class.highlight]="this.highlight_chapter === info.chapter_id" class="list-group-item list-group-item"
+            routerLink="/comic/chapter/{{book_id}}/{{info.chapter_id}}" style=" height: 48px;">
+            <div style="display: flex; justify-content: flex-start; align-items: center; gap: 6px; height: 100%;">
+                <div style="margin-right: auto;">{{ info.chapter_name }}</div>
+                <ng-container *ngIf="state !== 'latest' && sync_state">
+                    <ng-container *ngIf="sync_state.chapters[info.chapter_id] === 1">
+                        <mat-icon class="material-symbols-rounded" style="color: green;">check_circle</mat-icon>
+                    </ng-container>
+                    <ng-container *ngIf="sync_state.chapters[info.chapter_id] > 0 && sync_state.chapters[info.chapter_id] < 1">
+                        <div style="display: inline-flex; justify-content: center; align-items: center; height: 24px; width: 24px;">
+                            <mat-progress-spinner [value]="sync_state.chapters[info.chapter_id] * 100" style="height: 20px; width: 20px;"></mat-progress-spinner>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="sync_state.chapters[info.chapter_id] === 0">
+                        <div style="display: inline-flex; justify-content: center; align-items: center; height: 24px; width: 24px;">
+                            <mat-spinner style="height: 20px; width: 20px;"></mat-spinner>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </li>
+    </ul>
+</ng-template>
+
+<ng-template #downloadGuide>
+    <div>还没有内容，要下载吗？</div>
+    <button (click)="syncFromRemote$.next(false)" color="primary" mat-raised-button>download</button>
+</ng-template>

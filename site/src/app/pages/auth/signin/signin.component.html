@@ -1,0 +1,13 @@
+<div style="width: 100%; max-width: 480px;">
+    <h2>登录以查看更多内容</h2>
+    <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>用户名</mat-label>
+        <input type="text" matInput [(ngModel)]="username">
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>密码</mat-label>
+        <input type="password" matInput [(ngModel)]="password">
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="width: 100%;" (click)="requestSignIn$.next(null)">登录</button>
+</div>
+

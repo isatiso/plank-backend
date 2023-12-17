@@ -3,8 +3,9 @@ version: '3'
 services:
   server:
     hostname: plank-server
-    image: node:16-alpine
+    image: node:18-alpine
     working_dir: /home/code
+    restart: always
     ports:
       - "3000:3000"
     expose:
@@ -13,6 +14,13 @@ services:
       - "MONGODB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@plank-mongo:27017/admin?connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256"
       - "RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@plank-rabbitmq:5672"
       - "PLANK_SERVER_HOST=${PLANK_SERVER_HOST}"
+      - "PLANK_CHECK_API=${PLANK_CHECK_API}"
+      - "PLANK_SITE_USERNAME=${PLANK_SITE_USERNAME}"
+      - "PLANK_SITE_PASSWORD=${PLANK_SITE_PASSWORD}"
+      - "PLANK_SITE_TOKEN_SECRET=${PLANK_SITE_TOKEN_SECRET}"
+      - "PLANK_COMIC_BASE=${PLANK_COMIC_BASE}"
+      - "COMIC_BASE_URL=${COMIC_BASE_URL}"
+      - "COMIC_PATH=/home/comic"
     volumes:
       - ./server/lib:/home/code
       - ./node_modules:/home/node_modules
@@ -20,6 +28,7 @@ services:
       - '${MARKDOWN_LOCAL_PATH}:/home/code/markdown'
       - ./server/node_modules:/home/code/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
+      - "${COMIC_PATH}:/home/comic"
     entrypoint:
       - "node"
       - "./index.js"
@@ -29,35 +38,48 @@ services:
     hostname: plank-nginx
     image: nginx
     working_dir: /etc/nginx
+    restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - "3001:80"
     expose:
-      - "80"
-      - "443"
+      - "3001"
     volumes:
-      - "${NGINX_LOCAL_PATH}/html:/usr/share/nginx/html"
-      - "${NGINX_LOCAL_PATH}/conf.d:/etc/nginx/conf.d"
-      - "${NGINX_LOCAL_PATH}/conf/nginx.conf:/etc/nginx/nginx.conf"
+      - ./site/dist/browser:/usr/share/nginx/html
+      - "${NGINX_LOCAL_PATH}/nginx.conf:/etc/nginx/nginx.conf"
       - "${NGINX_LOCAL_PATH}/logs:/var/log/nginx"
-      - "${NGINX_LOCAL_PATH}/certs:/etc/nginx/cert"
+      - ./fonts:/usr/share/nginx/fonts
     networks:
       - "plank-net"
   mongodb:
     hostname: plank-mongo
-    image: mongo:6.0
+    image: mongo:6
     ports:
       - "27017:27017"
     expose:
       - "27017"
+    restart: always
     environment:
       - "MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}"
       - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
     networks:
       - "plank-net"
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    expose:
+      - "8081"
+    environment:
+      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_INITDB_ROOT_USERNAME}"
+      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_INITDB_ROOT_PASSWORD}"
+      - "ME_CONFIG_MONGODB_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/"
+    networks:
+      - "plank-net"
   rabbitmq:
     hostname: plank-rabbitmq
     image: rabbitmq:3-management
+    restart: always
     ports:
       - "15672:15672"
       - "5672:5672"

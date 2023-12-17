@@ -1,0 +1,29 @@
+<div style="width: 100%; max-width: 600px; margin: 0 auto">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 0">
+        <button (click)="go_back()" mat-button style="margin-right: auto;">
+            <mat-icon>arrow_back</mat-icon>
+            回目录
+        </button>
+    </div>
+    <div style="font-size: 1.5rem; line-height: 1.5; font-weight: 700; padding: 8px 0 16px;">{{ book_name }}</div>
+    <div>{{ chapter_name }}</div>
+    <div style="margin: 12px auto; max-width: 600px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+        <button [disabled]="!prev_chapter" color="primary" mat-raised-button routerLink="/comic/chapter/{{book_id}}/{{prev_chapter}}">上一章</button>
+        <button [disabled]="!next_chapter" color="primary" mat-raised-button routerLink="/comic/chapter/{{book_id}}/{{next_chapter}}">下一章</button>
+    </div>
+    <ng-container *ngFor="let img of image_list">
+        <img alt="" src="{{environment.comic_base + img.image_path.slice(11)}}" style="width: 100%"/>
+    </ng-container>
+</div>
+
+<div #trigger="cdkOverlayOrigin" cdkOverlayOrigin style="height: 0; position: fixed; bottom: 0; left: 0; width: 100vw;"></div>
+
+<ng-template [cdkConnectedOverlayOpen]="show_overlay" [cdkConnectedOverlayOrigin]="trigger" cdkConnectedOverlay>
+    <div style="width: 100vw; padding: 0 16px;">
+        <div style="margin: 12px auto 8vh; max-width: 600px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <button [disabled]="!prev_chapter" color="primary" mat-raised-button routerLink="/comic/chapter/{{book_id}}/{{prev_chapter}}">上一章</button>
+            <button (click)="scroll_top()" mat-raised-button>回顶部</button>
+            <button [disabled]="!next_chapter" color="primary" mat-raised-button routerLink="/comic/chapter/{{book_id}}/{{next_chapter}}">下一章</button>
+        </div>
+    </div>
+</ng-template>

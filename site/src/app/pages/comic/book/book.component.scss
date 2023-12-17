@@ -1,0 +1,22 @@
+.highlight {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+
+    .text {
+        font-size: 1.5rem;
+        line-height: 1.5;
+    }
+
+    .action {
+        margin-left: auto;
+    }
+}

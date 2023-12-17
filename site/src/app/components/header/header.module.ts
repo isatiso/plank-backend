@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common'
+import { CommonModule, NgOptimizedImage } from '@angular/common'
 import { NgModule } from '@angular/core'
 import { MatIconModule } from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { RouterLink } from '@angular/router'
 import { HeaderComponent } from './header.component'
 import { MatButtonModule } from '@angular/material/button'
+import { MatMenuModule } from '@angular/material/menu'
 
 @NgModule({
     declarations: [
@@ -18,7 +19,9 @@ import { MatButtonModule } from '@angular/material/button'
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        RouterLink
+        RouterLink,
+        MatMenuModule,
+        NgOptimizedImage
     ]
 })
 export class HeaderModule {
