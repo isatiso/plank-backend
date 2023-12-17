@@ -17,7 +17,7 @@ export class BookListComponent extends Base implements OnInit, OnDestroy {
     refresh$ = new Subject<void>()
 
     overview_state: SyncStateOverview = {}
-    highlight_book = 0
+    highlight_book = ''
 
     constructor(
         public comic: ComicService,
@@ -46,7 +46,7 @@ export class BookListComponent extends Base implements OnInit, OnDestroy {
         ).subscribe()
         this.route.queryParams.pipe(
             takeUntil(this.destroy$),
-            tap(params => this.highlight_book = +params['highlight_book']),
+            tap(params => this.highlight_book = params['highlight_book']),
         ).subscribe()
         this.route.paramMap.pipe(
             takeUntil(this.destroy$),

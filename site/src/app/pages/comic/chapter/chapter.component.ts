@@ -11,7 +11,7 @@ import { environment } from '../../../../environments/environment'
     styleUrls: ['./chapter.component.scss']
 })
 export class ChapterComponent extends Base implements OnInit, OnDestroy {
-    book_id = 0
+    book_id = ''
     chapter_id = 0
     book_name = ''
     chapter_name = ''
@@ -68,7 +68,7 @@ export class ChapterComponent extends Base implements OnInit, OnDestroy {
         ).subscribe()
         this.route.paramMap.pipe(
             takeUntil(this.destroy$),
-            tap(params => this.book_id = +params.get('book_id')!),
+            tap(params => this.book_id = params.get('book_id')!),
             tap(params => this.chapter_id = +params.get('chapter_id')!),
             tap(() => this.getBookInfo$.next(null)),
             tap(() => this.getChapterInfo$.next(null)),

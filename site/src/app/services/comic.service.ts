@@ -11,7 +11,7 @@ import { ObjectData } from 'plank-types'
 
 // type PlankResponse = any
 export interface SyncState {
-    book_id: number
+    book_id: string
     book_name: string
     state: 'idle' | 'processing' | 'latest'
     chapters_index: number[]
@@ -19,10 +19,10 @@ export interface SyncState {
     chapters: Record<number, number>
 }
 
-export type SyncStateOverview = Record<number, Pick<SyncState, 'book_id' | 'book_name' | 'state'>>
+export type SyncStateOverview = Record<string, Pick<SyncState, 'book_id' | 'book_name' | 'state'>>
 
 export type BookInfo = {
-    book_id: number
+    book_id: string
     book_name: string
     state: string
     type: 'photo' | 'gray' | 'color' | 'boring'
@@ -58,7 +58,7 @@ export class ComicService {
             )
     }
 
-    sync_from_remote(book_id: number, update: boolean) {
+    sync_from_remote(book_id: string, update: boolean) {
         return this.http_client.post<ObjectData<ComicResponse['sync_from_remote']>>(
             environment.api_host + '/comic-data/sync-from-remote', { book_id, update }
         ).pipe(
@@ -72,18 +72,18 @@ export class ComicService {
         ).asObservable()
     }
 
-    subscribe_book(book_id: number) {
+    subscribe_book(book_id: string) {
         return webSocket<ComicSubscribe['subscribe_book']>(
             'wss://' + environment.api_hostname + `/comic-data/subscribe-book/${book_id}`
         ).asObservable()
     }
 
-    update_type(book_id: number, type: 'photo' | 'gray' | 'color' | 'boring') {
+    update_type(book_id: string, type: 'photo' | 'gray' | 'color' | 'boring') {
         return this.http_client.post<ObjectData<ComicResponse['update_type']>>(
             environment.api_host + '/comic-data/update-type', { book_id, type })
     }
 
-    like(book_id: number, value: boolean) {
+    like(book_id: string, value: boolean) {
         return this.http_client.post<ObjectData<ComicResponse['like']>>(
             environment.api_host + '/comic-data/like', { book_id, value })
     }
@@ -101,17 +101,17 @@ export class ComicService {
         )
     }
 
-    fetch_book(book_id: number) {
+    fetch_book(book_id: string) {
         return this.http_client.get<ObjectData<ComicResponse['book']>>(environment.api_host + `/comic-data/book/${book_id}`).pipe(
             tap(res => console.log(res)),
             map(res => res.data),
         )
     }
 
-    fetch_chapter(book_id: number, chapter_id: number) {
+    fetch_chapter(book_id: string, chapter_id: number) {
         return this.http_client.get<{
             data: {
-                book_id: number
+                book_id: string
                 chapter_id: number
                 images_index: string[]
                 images: Record<string, {
@@ -125,7 +125,7 @@ export class ComicService {
         )
     }
 
-    go_page_of_book(book_id: number) {
+    go_page_of_book(book_id: string) {
         const index = this.all_book_list.findIndex(book => book.book_id === book_id)
         console.log('go_page_of_book', book_id, index, this.all_book_list)
         if (index === -1) {

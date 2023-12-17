@@ -13,7 +13,7 @@ import { UserService } from '../../../services/user.service'
 })
 export class BookComponent extends Base implements OnInit, OnDestroy {
 
-    book_id = 0
+    book_id = ''
     book_name = ''
     state: 'idle' | 'processing' | 'latest' | undefined
     like: boolean = false
@@ -94,7 +94,7 @@ export class BookComponent extends Base implements OnInit, OnDestroy {
         ).subscribe()
         this.route.paramMap.pipe(
             takeUntil(this.destroy$),
-            tap(params => this.book_id = +params.get('book_id')!),
+            tap(params => this.book_id = params.get('book_id')!),
             tap(() => this.getBookInfo$.next(null)),
         ).subscribe()
     }

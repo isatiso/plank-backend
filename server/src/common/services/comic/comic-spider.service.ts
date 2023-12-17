@@ -88,6 +88,7 @@ export class ComicSpiderService {
             return meta
         }
         const total_page = await this.get_total_page()
+        console.log('total_page', total_page)
         const books: (readonly [string, string])[] = []
         for (let i = 0; i < total_page; i++) {
             const data = await this.fetch_remote(this.base_url + `/index.php/category/page/${i + 1}`)
@@ -193,7 +194,7 @@ export class ComicSpiderService {
 
     async get_total_page() {
         const data = await this.fetch_remote(this.base_url + `/index.php/category/page/1`)
-        const last_page_str = parse(data).querySelector('div#Pagination a.end')?.attrs['href'].split('/').slice(-1)[0] ?? '1'
+        const last_page_str = parse(data).querySelector('div#Pagination a.end')?.getAttribute('href')?.split('/').slice(-1)[0] ?? '1'
         return +last_page_str
     }
 
